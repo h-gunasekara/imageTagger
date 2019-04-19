@@ -122,7 +122,7 @@ static bool handle_http_request(int sockfd)
 
             // get the size of the file
             struct stat st;
-            stat("2-start.html", &st);
+            stat("2_start.html", &st);
             // increase file size to accommodate the username
             long size = st.st_size + added_length;
             n = sprintf(buff, HTTP_200_FORMAT, size);
@@ -133,7 +133,7 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             // read the content of the HTML file
-            int filefd = open("2-start.html", O_RDONLY);
+            int filefd = open("2_start.html", O_RDONLY);
             n = read(filefd, buff, 2048);
             if (n < 0)
             {
