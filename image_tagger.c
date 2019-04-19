@@ -63,15 +63,15 @@ static bool handle_http_request(int sockfd)
 
     // parse the method
     METHOD method = UNKNOWN;
-    if (strncmp(curr, "GET ", 4) == 0)
+    if (strncmp(curr, "INTRO ", 4) == 0)
     {
         curr += 4;
-        method = GET;
+        method = INTRO;
     }
-    else if (strncmp(curr, "POST ", 5) == 0)
+    else if (strncmp(curr, "START ", 5) == 0)
     {
         curr += 5;
-        method = POST;
+        method = START;
     }
     else if (write(sockfd, HTTP_400, HTTP_400_LENGTH) < 0)
     {
