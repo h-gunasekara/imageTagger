@@ -117,7 +117,7 @@ static bool handle_http_request(int sockfd)
 
             // get the size of the file
             struct stat st;
-            stat("lab6-POST.html", &st);
+            stat("2_start.html", &st);
             // increase file size to accommodate the username
             long size = st.st_size + added_length;
             n = sprintf(buff, HTTP_200_FORMAT, size);
@@ -128,7 +128,7 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             // read the content of the HTML file
-            int filefd = open("lab6-POST.html", O_RDONLY);
+            int filefd = open("2_start.html", O_RDONLY);
             n = read(filefd, buff, 2048);
             if (n < 0)
             {
@@ -253,6 +253,7 @@ int main(int argc, char * argv[])
                             inet_ntop(cliaddr.sin_family, &cliaddr.sin_addr, ip, INET_ADDRSTRLEN),
                             newsockfd
                         );
+                        printf("image_tagger is now running at IP: %s on port %d", ip, newsockfd);
                     }
                 }
                 // a request is sent from the client
