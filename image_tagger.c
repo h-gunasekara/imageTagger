@@ -90,8 +90,8 @@ static bool handle_http_request(int sockfd)
             if (n == 439) {
               stat("1_intro.html", &st);
             }
-            else if (n == 615) {
-              stat("3_first_turn.html", &st);
+            else if (n == 1000) {
+                stat("3_first_turn.html", &st);
             }
 
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
