@@ -90,7 +90,7 @@ static bool handle_http_request(int sockfd)
             if (n == 439) {
               stat("1_intro.html", &st);
             }
-            else if (n == 1000) {
+            else if (n == 615) {
                 stat("3_first_turn.html", &st);
             }
 
