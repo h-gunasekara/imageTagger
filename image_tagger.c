@@ -56,6 +56,7 @@ static bool handle_http_request(int sockfd)
 
     char * curr = buff;
     int get_count = 0;
+    printf("GET curr: %d\n", curr);
 
     // parse the method
     METHOD method = UNKNOWN;
@@ -63,8 +64,7 @@ static bool handle_http_request(int sockfd)
     {
         curr += 4;
         method = GET;
-        get_count++;
-        printf("GET COUNT: %d\n", get_count);
+        printf("GET curr: %d\n", curr);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
     {
@@ -86,12 +86,12 @@ static bool handle_http_request(int sockfd)
         {
             // get the size of the file
             struct stat st;
-            if (get_count == 1) {
+      //      if (get_count == 1) {
               stat("1_intro.html", &st);
-            }
-            else if (get_count == 2) {
-              stat("3_first_turn.html", &st);
-            }
+        //    }
+        //    else if (get_count == 2) {
+        //      stat("3_first_turn.html", &st);
+      //      }
 
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
             // send the header first
@@ -102,12 +102,13 @@ static bool handle_http_request(int sockfd)
             }
             // send the file
             int filefd;
-            if (get_count == 1) {
-              filefd = open("1_intro.html", O_RDONLY);
-            }
-            else if (get_count == 2) {
-              filefd = open("3_first_turn.html", O_RDONLY);
-            }
+            //if (get_count == 1) {
+            filefd = open("1_intro.html", O_RDONLY);
+            printf("GET curr: %d\n", curr);
+          //  }
+          //  else if (get_count == 2) {
+          //    filefd = open("3_first_turn.html", O_RDONLY);
+          //  }
 
             do
             {
