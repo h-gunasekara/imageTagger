@@ -277,7 +277,7 @@ int main(int argc, char * argv[])
                     }
                 }
                 // a request is sent from the client
-                else if (!handle_http_request(i))
+                else if (!handle_http_request(i, get_count))
                 {
                     close(i);
                     FD_CLR(i, &masterfds);
