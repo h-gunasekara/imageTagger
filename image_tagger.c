@@ -90,7 +90,7 @@ static bool handle_http_request(int sockfd)
             if (n == 439) {
               stat("1_intro.html", &st);
             }
-            else if (n == 487) {
+            else if (n == 377) {
               stat("3_first_turn.html", &st);
             }
 
@@ -102,10 +102,10 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             // send the file
+            printf("GET count: %d\n", n);
             int filefd;
             if (n == 65) {
               filefd = open("1_intro.html", O_RDONLY);
-              printf("GET count: %d\n", n);
             }
             else if (n == 487) {
               filefd = open("3_first_turn.html", O_RDONLY);
