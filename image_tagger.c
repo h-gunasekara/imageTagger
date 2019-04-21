@@ -64,7 +64,7 @@ static bool handle_http_request(int sockfd)
     {
         curr += 4;
         method = GET;
-        get_count++;
+
         printf("GET count: %d\n", sockfd);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
