@@ -37,7 +37,7 @@ typedef enum
     UNKNOWN
 } METHOD;
 
-static bool handle_http_request(int sockfd, int get_count)
+static bool handle_http_request(int sockfd)
 {
     // try to read the request
     char buff[2049];
@@ -56,7 +56,7 @@ static bool handle_http_request(int sockfd, int get_count)
 
     char * curr = buff;
 
-    printf("GET count: %d\n", get_count);
+    printf("GET count: %d\n", sockfd);
 
     // parse the method
     METHOD method = UNKNOWN;
@@ -65,7 +65,7 @@ static bool handle_http_request(int sockfd, int get_count)
         curr += 4;
         method = GET;
         get_count++;
-        printf("GET count: %d\n", get_count);
+        printf("GET count: %d\n", sockfd);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
     {
@@ -105,7 +105,7 @@ static bool handle_http_request(int sockfd, int get_count)
             int filefd;
             //if (get_count == 1) {
             filefd = open("1_intro.html", O_RDONLY);
-            printf("GET count: %d\n", get_count);
+            printf("GET count: %d\n", sockfd);
           //  }
           //  else if (get_count == 2) {
           //    filefd = open("3_first_turn.html", O_RDONLY);
@@ -232,8 +232,6 @@ int main(int argc, char * argv[])
     FD_SET(sockfd, &masterfds);
     // record the maximum socket number
     int maxfd = sockfd;
-    int get_count = 0;
-    int put_count = 0;
 
     while (1)
     {
@@ -277,7 +275,7 @@ int main(int argc, char * argv[])
                     }
                 }
                 // a request is sent from the client
-                else if (!handle_http_request(i, get_count))
+                else if (!handle_http_request(i))
                 {
                     close(i);
                     FD_CLR(i, &masterfds);
