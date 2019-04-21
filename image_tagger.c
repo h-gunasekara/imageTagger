@@ -56,7 +56,6 @@ static bool handle_http_request(int sockfd)
 
     char * curr = buff;
 
-    printf("GET count: %d\n", n);
 
     // parse the method
     METHOD method = UNKNOWN;
@@ -65,7 +64,7 @@ static bool handle_http_request(int sockfd)
         curr += 4;
         method = GET;
 
-        printf("\\nN start: %d\n", n);
+        printf("\n N start: %d\n", n);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
     {
@@ -90,7 +89,7 @@ static bool handle_http_request(int sockfd)
             if (n == 439) {
               stat("1_intro.html", &st);
             }
-            else if (n == 615) {
+            else if (n == 487) {
                 stat("3_first_turn.html", &st);
             }
 
