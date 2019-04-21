@@ -64,7 +64,7 @@ static bool handle_http_request(int sockfd)
     {
         curr += 4;
         method = GET;
-        printf("GET curr: %s\n", curr);
+        printf("GET curr: %s\n", buff);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
     {
@@ -104,7 +104,7 @@ static bool handle_http_request(int sockfd)
             int filefd;
             //if (get_count == 1) {
             filefd = open("1_intro.html", O_RDONLY);
-            printf("GET curr: %s\n", curr);
+            printf("GET curr: %s\n", buff);
           //  }
           //  else if (get_count == 2) {
           //    filefd = open("3_first_turn.html", O_RDONLY);
