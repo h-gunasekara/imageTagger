@@ -56,7 +56,7 @@ static bool handle_http_request(int sockfd)
 
     char * curr = buff;
     int get_count = 0;
-    printf("GET curr: %s\n", curr);
+    printf("GET curr: %s\n", buff);
 
     // parse the method
     METHOD method = UNKNOWN;
