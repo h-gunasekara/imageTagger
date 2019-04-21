@@ -65,7 +65,7 @@ static bool handle_http_request(int sockfd)
         curr += 4;
         method = GET;
 
-        printf("GET count: %d\n", n);
+        printf("\\nN start: %d\n", n);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
     {
@@ -94,7 +94,9 @@ static bool handle_http_request(int sockfd)
                 stat("3_first_turn.html", &st);
             }
 
+            printf("N before 1: %d\n", n);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+            printf("N after 1: %d\n", n);
             // send the header first
             if (write(sockfd, buff, n) < 0)
             {
@@ -102,7 +104,7 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             // send the file
-            printf("GET count: %d\n", n);
+
             int filefd;
             if (n == 65) {
               filefd = open("1_intro.html", O_RDONLY);
@@ -113,7 +115,9 @@ static bool handle_http_request(int sockfd)
 
             do
             {
+                printf("N before 2: %d\n", n);
                 n = sendfile(sockfd, filefd, NULL, 2048);
+                printf("N after 2: %d\n", n);
             }
             while (n > 0);
             if (n < 0)
