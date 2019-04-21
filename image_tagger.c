@@ -37,7 +37,7 @@ typedef enum
     UNKNOWN
 } METHOD;
 
-static bool handle_http_request(int sockfd)
+static bool handle_http_request(int sockfd, int get_count)
 {
     // try to read the request
     char buff[2049];
