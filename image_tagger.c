@@ -104,8 +104,8 @@ static bool handle_http_request(int sockfd)
             // send the file
             int filefd;
             if (n == 65) {
-            filefd = open("1_intro.html", O_RDONLY);
-            printf("GET count: %d\n", n);
+              filefd = open("1_intro.html", O_RDONLY);
+              printf("GET count: %d\n", n);
             }
             else if (n == 487) {
               filefd = open("3_first_turn.html", O_RDONLY);
