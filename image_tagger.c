@@ -100,11 +100,12 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             // send the file
+            int filefd;
             if (get_count == 1) {
-              int filefd = open("1_intro.html", O_RDONLY);
+              filefd = open("1_intro.html", O_RDONLY);
             }
             else if (get_count == 2) {
-              int filefd = open("3_first_turn.html", O_RDONLY);
+              filefd = open("3_first_turn.html", O_RDONLY);
             }
 
             do
