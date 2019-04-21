@@ -87,12 +87,12 @@ static bool handle_http_request(int sockfd)
         {
             // get the size of the file
             struct stat st;
-      //      if (get_count == 1) {
+            if (n == 439) {
               stat("1_intro.html", &st);
-        //    }
-        //    else if (get_count == 2) {
-        //      stat("3_first_turn.html", &st);
-      //      }
+            }
+            else if (n == 487) {
+              stat("3_first_turn.html", &st);
+            }
 
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
             // send the header first
@@ -103,13 +103,13 @@ static bool handle_http_request(int sockfd)
             }
             // send the file
             int filefd;
-            //if (get_count == 1) {
+            if (n == 65) {
             filefd = open("1_intro.html", O_RDONLY);
             printf("GET count: %d\n", n);
-          //  }
-          //  else if (get_count == 2) {
-          //    filefd = open("3_first_turn.html", O_RDONLY);
-          //  }
+            }
+            else if (n == 487) {
+              filefd = open("3_first_turn.html", O_RDONLY);
+            }
 
             do
             {
