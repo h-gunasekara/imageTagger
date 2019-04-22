@@ -191,6 +191,56 @@ static bool handle_http_request(int sockfd)
         else
             // never used, just for completeness
             fprintf(stderr, "no other methods supported");
+
+    else if (*curr == '?')
+    {
+      if (method == GET)
+      {
+          // get the size of the file
+          struct stat st;
+          printf("\nN before loop GET: %d\n", n);
+          if (n == 439) {
+            stat("1_intro.html", &st);
+          }
+          else if ((strncmp(curr, "GET /?start=Start", 14) == 0)) {
+              stat("3_first_turn.html", &st);
+          }
+
+          printf("N GET before 1: %d\n", n);
+          n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+          printf("N GET after 1: %d\n", n);
+          // send the header first
+          if (write(sockfd, buff, n) < 0)
+          {
+              perror("write");
+              return false;
+          }
+          // send the file
+
+          int filefd;
+          if (n == 65) {
+            filefd = open("1_intro.html", O_RDONLY);
+          }
+          else if (n == 487) {
+            filefd = open("3_first_turn.html", O_RDONLY);
+          }
+
+          do
+          {
+              printf("N GET before 2: %d\n", n);
+              n = sendfile(sockfd, filefd, NULL, 2048);
+              printf("N GET after 2: %d\n", n);
+          }
+          while (n > 0);
+          if (n < 0)
+          {
+              perror("sendfile");
+              close(filefd);
+              return false;
+          }
+          close(filefd);
+      }
+    }
     // send 404
     else if (write(sockfd, HTTP_404, HTTP_404_LENGTH) < 0)
     {
