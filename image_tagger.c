@@ -92,13 +92,7 @@ static bool handle_http_request(int sockfd)
             // get the size of the file
             struct stat st;
             printf("\nN before loop GET: %d\n", n);
-            if (n == 439) {
-              stat("1_intro.html", &st);
-            }
-            else if ((strncmp(curr, "GET /?start=Start", 14) == 0)) {
-                stat("3_first_turn.html", &st);
-            }
-
+            stat("1_intro.html", &st);
             printf("N GET before 1: %d\n", n);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
             printf("N GET after 1: %d\n", n);
@@ -111,13 +105,8 @@ static bool handle_http_request(int sockfd)
             // send the file
 
             int filefd;
-            if (n == 65) {
-              filefd = open("1_intro.html", O_RDONLY);
-            }
-            else if (n == 487) {
-              filefd = open("3_first_turn.html", O_RDONLY);
-            }
 
+            filefd = open("1_intro.html", O_RDONLY);
             do
             {
                 printf("N GET before 2: %d\n", n);
@@ -199,12 +188,8 @@ static bool handle_http_request(int sockfd)
           // get the size of the file
           struct stat st;
           printf("\nN before loop GET: %d\n", n);
-          if (n == 439) {
-            stat("1_intro.html", &st);
-          }
-          else if ((strncmp(curr, "GET /?start=Start", 14) == 0)) {
-              stat("3_first_turn.html", &st);
-          }
+
+          stat("3_first_turn.html", &st);
 
           printf("N GET before 1: %d\n", n);
           n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
@@ -218,12 +203,8 @@ static bool handle_http_request(int sockfd)
           // send the file
 
           int filefd;
-          if (n == 65) {
-            filefd = open("1_intro.html", O_RDONLY);
-          }
-          else if (n == 487) {
-            filefd = open("3_first_turn.html", O_RDONLY);
-          }
+
+          filefd = open("3_first_turn.html", O_RDONLY);
 
           do
           {
