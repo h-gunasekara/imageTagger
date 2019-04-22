@@ -87,6 +87,7 @@ static bool handle_http_request(int sockfd)
         {
             // get the size of the file
             struct stat st;
+            printf("\nN before loop GET: %d\n", n);
             if (n == 439) {
               stat("1_intro.html", &st);
             }
@@ -159,7 +160,7 @@ static bool handle_http_request(int sockfd)
             printf("N POST before 2: %d\n", n);
             n = read(filefd, buff, 2048);
             printf("N POST after 2: %d\n", n);
-            
+
             if (n < 0)
             {
                 perror("read");
