@@ -84,6 +84,8 @@ static bool handle_http_request(int sockfd)
 
     // sanitise the URI
     while (*curr == '.' || *curr == '/')
+        printf("curr = %s\n", curr);
+        printf("*curr = %d\n", *curr);
         ++curr;
     // assume the only valid request URI is "/" but it can be modified to accept more files
     if (*curr == ' ')
