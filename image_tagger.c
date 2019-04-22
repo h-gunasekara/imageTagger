@@ -71,6 +71,8 @@ static bool handle_http_request(int sockfd)
         curr += 5;
         method = POST;
         printf("\nN start POST: %d\n", n);
+        printf("curr = %d\n", curr);
+        printf("curr = %s\n", *curr);
     }
     else if (write(sockfd, HTTP_400, HTTP_400_LENGTH) < 0)
     {
