@@ -187,13 +187,10 @@ static bool handle_http_request(int sockfd)
       {
           // get the size of the file
           struct stat st;
-          printf("\nN before loop GET: %d\n", n);
-
           stat("3_first_turn.html", &st);
 
-          printf("N GET before 1: %d\n", n);
           n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-          printf("N GET after 1: %d\n", n);
+
           // send the header first
           if (write(sockfd, buff, n) < 0)
           {
@@ -206,9 +203,7 @@ static bool handle_http_request(int sockfd)
 
           do
           {
-              printf("N GET before 2: %d\n", n);
               n = sendfile(sockfd, filefd, NULL, 2048);
-              printf("N GET after 2: %d\n", n);
           }
           while (n > 0);
           if (n < 0)
@@ -227,7 +222,8 @@ static bool handle_http_request(int sockfd)
           // Discarding the key in the case that the other player isnt ready
 
 
-          char * keyword = strstr(buff, "user=") + 5;
+
+          char * keyword = strstr(buff, "keyword=") + 5;
           int keyword_length = strlen(keyword);
           // the length needs to include the ", " before the username
           long added_length = keyword_length + 2;
@@ -370,6 +366,11 @@ int main(int argc, char * argv[])
                     {
                         // add the socket to the set
                         FD_SET(newsockfd, &masterfds);
+
+                        printf(&masterfds);
+                        printf(newsockfd);
+
+
                         // update the maximum tracker
                         if (newsockfd > maxfd)
                             maxfd = newsockfd;
