@@ -227,10 +227,10 @@ static bool handle_http_request(int sockfd)
           // Discarding the key in the case that the other player isnt ready
 
 
-          //char * username = strstr(buff, "user=") + 5;
-          //int username_length = strlen(username);
+          char * keyword = strstr(buff, "user=") + 5;
+          int keyword_length = strlen(keyword);
           // the length needs to include the ", " before the username
-          //long added_length = username_length + 2;
+          long added_length = keyword_length + 2;
 
           // get the size of the file
           struct stat st;
@@ -272,7 +272,7 @@ static bool handle_http_request(int sockfd)
           buff[p2++] = ',';
           buff[p2++] = ' ';
           // copy the username
-          strncpy(buff + p2, username, username_length);
+          strncpy(buff + p2, keyword, keyword_length);
           if (write(sockfd, buff, size) < 0)
           {
               perror("write");
