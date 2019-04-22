@@ -82,10 +82,8 @@ static bool handle_http_request(int sockfd)
         return false;
     }
 
-    int count = 0;
     // sanitise the URI
     while (*curr == '.' || *curr == '/')
-        printf("*curr = %d\n", count++);
         ++curr;
     // assume the only valid request URI is "/" but it can be modified to accept more files
     if (*curr == ' ')
@@ -97,7 +95,7 @@ static bool handle_http_request(int sockfd)
             if (n == 439) {
               stat("1_intro.html", &st);
             }
-            else if (n == 487) {
+            else if ((strncmp(curr, "GET /?start=Start", 14) == 0)) {
                 stat("3_first_turn.html", &st);
             }
 
