@@ -202,9 +202,7 @@ static bool handle_http_request(int sockfd)
           }
           // send the file
 
-          int filefd;
-
-          filefd = open("3_first_turn.html", O_RDONLY);
+          int filefd = open("3_first_turn.html", O_RDONLY);
 
           do
           {
@@ -221,6 +219,70 @@ static bool handle_http_request(int sockfd)
           }
           close(filefd);
       }
+      else if (method == POST)
+      {
+          // locate the username, it is safe to do so in this sample code, but usually the result is expected to be
+          // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
+
+          // Discarding the key in the case that the other player isnt ready
+
+
+          //char * username = strstr(buff, "user=") + 5;
+          //int username_length = strlen(username);
+          // the length needs to include the ", " before the username
+          //long added_length = username_length + 2;
+
+          // get the size of the file
+          struct stat st;
+
+          stat("5_discared.html", &st);
+          // increase file size to accommodate the username
+          long size = st.st_size + added_length;
+
+          printf("N POST before 1: %d\n", n);
+          n = sprintf(buff, HTTP_200_FORMAT, size);
+          printf("N POST after 1: %d\n", n);
+
+          // send the header first
+          if (write(sockfd, buff, n) < 0)
+          {
+              perror("write");
+              return false;
+          }
+          // read the content of the HTML file
+          int filefd = open("5_discarded.html", O_RDONLY);
+
+          printf("N POST before 2: %d\n", n);
+          n = read(filefd, buff, 2048);
+          printf("N POST after 2: %d\n", n);
+
+          if (n < 0)
+          {
+              perror("read");
+              close(filefd);
+              return false;
+          }
+          close(filefd);
+          // move the trailing part backward
+          int p1, p2;
+          for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
+              buff[p1] = buff[p2];
+          ++p2;
+          // put the separator
+          buff[p2++] = ',';
+          buff[p2++] = ' ';
+          // copy the username
+          strncpy(buff + p2, username, username_length);
+          if (write(sockfd, buff, size) < 0)
+          {
+              perror("write");
+              return false;
+          }
+      }
+      else
+          // never used, just for completeness
+          fprintf(stderr, "no other methods supported");
+
     }
     // send 404
     else if (write(sockfd, HTTP_404, HTTP_404_LENGTH) < 0)
