@@ -65,6 +65,8 @@ static bool handle_http_request(int sockfd)
         method = GET;
 
         printf("\nN start GET: %d\n", n);
+        printf("curr = %s\n", curr);
+        printf("*curr = %d\n", *curr);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
     {
@@ -72,7 +74,7 @@ static bool handle_http_request(int sockfd)
         method = POST;
         printf("\nN start POST: %d\n", n);
         printf("curr = %s\n", curr);
-        printf("curr = %d\n", *curr);
+        printf("*curr = %d\n", *curr);
     }
     else if (write(sockfd, HTTP_400, HTTP_400_LENGTH) < 0)
     {
