@@ -367,7 +367,7 @@ int main(int argc, char * argv[])
                         // add the socket to the set
                         FD_SET(newsockfd, &masterfds);
 
-                        printf("%s", &masterfds);
+
                         printf("%d", newsockfd);
 
 
