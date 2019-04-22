@@ -367,8 +367,8 @@ int main(int argc, char * argv[])
                         // add the socket to the set
                         FD_SET(newsockfd, &masterfds);
 
-                        printf(&masterfds);
-                        printf(newsockfd);
+                        printf("%s", &masterfds);
+                        printf("%d", newsockfd);
 
 
                         // update the maximum tracker
