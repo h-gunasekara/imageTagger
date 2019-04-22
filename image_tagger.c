@@ -64,12 +64,13 @@ static bool handle_http_request(int sockfd)
         curr += 4;
         method = GET;
 
-        printf("\n N start: %d\n", n);
+        printf("\nN start GET: %d\n", n);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
     {
         curr += 5;
         method = POST;
+        printf("\nN start POST: %d\n", n);
     }
     else if (write(sockfd, HTTP_400, HTTP_400_LENGTH) < 0)
     {
@@ -93,9 +94,9 @@ static bool handle_http_request(int sockfd)
                 stat("3_first_turn.html", &st);
             }
 
-            printf("N before 1: %d\n", n);
+            printf("N GET before 1: %d\n", n);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-            printf("N after 1: %d\n", n);
+            printf("N GET after 1: %d\n", n);
             // send the header first
             if (write(sockfd, buff, n) < 0)
             {
@@ -114,9 +115,9 @@ static bool handle_http_request(int sockfd)
 
             do
             {
-                printf("N before 2: %d\n", n);
+                printf("N GET before 2: %d\n", n);
                 n = sendfile(sockfd, filefd, NULL, 2048);
-                printf("N after 2: %d\n", n);
+                printf("N GET after 2: %d\n", n);
             }
             while (n > 0);
             if (n < 0)
@@ -141,7 +142,11 @@ static bool handle_http_request(int sockfd)
             stat("2_start.html", &st);
             // increase file size to accommodate the username
             long size = st.st_size + added_length;
+
+            printf("N POST before 1: %d\n", n);
             n = sprintf(buff, HTTP_200_FORMAT, size);
+            printf("N POST after 1: %d\n", n);
+
             // send the header first
             if (write(sockfd, buff, n) < 0)
             {
@@ -150,7 +155,11 @@ static bool handle_http_request(int sockfd)
             }
             // read the content of the HTML file
             int filefd = open("2_start.html", O_RDONLY);
+
+            printf("N POST before 2: %d\n", n);
             n = read(filefd, buff, 2048);
+            printf("N POST after 2: %d\n", n);
+            
             if (n < 0)
             {
                 perror("read");
