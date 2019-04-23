@@ -221,10 +221,10 @@ static bool handle_http_request(int sockfd)
 
           // Discarding the key in the case that the other player isnt ready
 
-          printf("%d\n", method);
-          printf("curr = %s\n", curr);
-          printf("*curr = %d\n", *curr);
-          printf("%s\n", buff);
+          printf("THIS IS THE METHOD:    %d\n\n\n\n", method);
+          printf("THIS IS THE curr:      %s\n\n\n\n", curr);
+          printf("THIS IS THE *curr:     %d\n\n\n\n", *curr);
+          printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
           //
           // char * keyword = strstr(buff, "keyword=") + 5;
           // int keyword_length = strlen(keyword);
