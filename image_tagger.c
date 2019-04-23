@@ -130,13 +130,7 @@ static bool handle_http_request(int sockfd)
             int username_length = strlen(username);
             // the length needs to include the ", " before the username
             long added_length = username_length + 2;
-<<<<<<< HEAD
-            
-=======
-            char final_username[added_length];
-            strncpy(final_username, username, added_length);
-            final_username[username_length + 1] = '\0';
->>>>>>> 4fd994b6e9290aa9b90eb2d6c33b4bb32b73ae04
+
             // get the size of the file
             struct stat st;
             stat("2_start.html", &st);
