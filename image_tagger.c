@@ -36,9 +36,8 @@ typedef struct {
   int sockfd;
   int nwords;
   char keywords[MAXKEYWORDS][MAXKEYLENGTH];
-} keyword_t;
+} client_keywords;
 
-struct keyword_t client_keywords;
 
 
 int players_ready=0;
