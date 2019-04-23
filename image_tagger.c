@@ -222,22 +222,22 @@ static bool handle_http_request(int sockfd)
           // Discarding the key in the case that the other player isnt ready
 
 
-
-          char * keyword = strstr(buff, "keyword=") + 5;
-          int keyword_length = strlen(keyword);
-          // the length needs to include the ", " before the username
-          long added_length = keyword_length + 2;
+          //
+          // char * keyword = strstr(buff, "keyword=") + 5;
+          // int keyword_length = strlen(keyword);
+          // // the length needs to include the ", " before the username
+          // long added_length = keyword_length + 2;
 
           // get the size of the file
           struct stat st;
 
           stat("5_discared.html", &st);
           // increase file size to accommodate the username
-          long size = st.st_size + added_length;
+          // long size = st.st_size + added_length;
 
-          printf("N POST before 1: %d\n", n);
+          // printf("N POST before 1: %d\n", n);
           n = sprintf(buff, HTTP_200_FORMAT, size);
-          printf("N POST after 1: %d\n", n);
+          // printf("N POST after 1: %d\n", n);
 
           // send the header first
           if (write(sockfd, buff, n) < 0)
@@ -248,9 +248,9 @@ static bool handle_http_request(int sockfd)
           // read the content of the HTML file
           int filefd = open("5_discarded.html", O_RDONLY);
 
-          printf("N POST before 2: %d\n", n);
+          // printf("N POST before 2: %d\n", n);
           n = read(filefd, buff, 2048);
-          printf("N POST after 2: %d\n", n);
+          // printf("N POST after 2: %d\n", n);
 
           if (n < 0)
           {
@@ -260,20 +260,20 @@ static bool handle_http_request(int sockfd)
           }
           close(filefd);
           // move the trailing part backward
-          int p1, p2;
-          for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
-              buff[p1] = buff[p2];
-          ++p2;
-          // put the separator
-          buff[p2++] = ',';
-          buff[p2++] = ' ';
+          // int p1, p2;
+          // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
+          //     buff[p1] = buff[p2];
+          // ++p2;
+          // // put the separator
+          // buff[p2++] = ',';
+          // buff[p2++] = ' ';
           // copy the username
-          strncpy(buff + p2, keyword, keyword_length);
-          if (write(sockfd, buff, size) < 0)
-          {
-              perror("write");
-              return false;
-          }
+          // strncpy(buff + p2, keyword, keyword_length);
+          // if (write(sockfd, buff, size) < 0)
+          // {
+              // perror("write");
+              // return false;
+          // }
       }
       else
           // never used, just for completeness
