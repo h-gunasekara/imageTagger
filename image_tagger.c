@@ -291,7 +291,7 @@ static bool handle_http_request(int sockfd)
             char final_keyword[added_length + 1];
             strncpy(final_keyword, keyword, added_length);
             final_keyword[added_length + 1] = '\0';
-            client_keywords.keywords[client_keywords.nwords] = final_keyword;
+            strncpy(client_keywords.keywords[client_keywords.nwords], final_keyword, MAXKEYLENGTH)
             client_keywords.nwords++;
             for (int i = 0; i < client_keywords.nwords; i++){
               printf("%s\n", client_keywords[i]);
