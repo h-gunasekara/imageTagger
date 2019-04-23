@@ -232,7 +232,7 @@ static bool handle_http_request(int sockfd)
            printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
            printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
           // // the length needs to include the ", " before the username
-           long added_length = keyword_length + 12;
+           long added_length = keyword_length - 12;
            printf("THIS IS THE KEYWORD LENGTH:      %li\n\n\n\n", added_length);
           // get the size of the file
            //struct stat st;
@@ -246,11 +246,11 @@ static bool handle_http_request(int sockfd)
           // printf("N POST after 1: %d\n", n);
 
           // send the header first
-          // if (write(sockfd, buff, n) < 0)
-          // {
-          //     perror("write");
-          //     return false;
-          // }
+          if (write(sockfd, buff, n) < 0)
+          {
+              perror("write");
+              return false;
+          }
           // read the content of the HTML file
 
 
