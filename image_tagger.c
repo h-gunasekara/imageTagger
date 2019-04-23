@@ -437,11 +437,6 @@ int main(int argc, char * argv[])
                     {
                         // add the socket to the set
                         FD_SET(newsockfd, &masterfds);
-
-
-                        printf("%d", newsockfd);
-
-
                         // update the maximum tracker
                         if (newsockfd > maxfd)
                             maxfd = newsockfd;
@@ -453,7 +448,6 @@ int main(int argc, char * argv[])
                             inet_ntop(cliaddr.sin_family, &cliaddr.sin_addr, ip, INET_ADDRSTRLEN),
                             newsockfd
                         );
-                        printf("image_tagger is now running at IP: %s on port %d", ip, newsockfd);
                     }
                 }
                 // a request is sent from the client
