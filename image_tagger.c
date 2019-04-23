@@ -288,14 +288,20 @@ static bool handle_http_request(int sockfd)
             int keyword_length = strlen(keyword);
            // // the length needs to include the ", " before the username
             long added_length = keyword_length - 12;
-            char final_keyword[added_length + 1];
-            strncpy(final_keyword, keyword, added_length);
-            final_keyword[added_length + 1] = '\0';
-            strncpy(client_keywords.keywords[client_keywords.nwords], final_keyword, MAXKEYLENGTH);
-            client_keywords.nwords++;
-            for (int i = 0; i < client_keywords.nwords; i++){
-              printf("%s\n", client_keywords.keywords[i]);
+            char final_keyword[MAXKEYLENGTH];
+            strncpy(final_keyword, keyword, MAXKEYLENGTH);
+            final_keyword[keyword_length + 1] = '\0';
+            strncpy(buff, final_keyword, MAXKEYLENGTH);
+            if (write(sockfd, buff, MAXKEYLENGTH) < 0)
+            {
+                perror("write");
+                return false;
             }
+            // strncpy(client_keywords.keywords[client_keywords.nwords], final_keyword, MAXKEYLENGTH);
+            // client_keywords.nwords++;
+            // for (int i = 0; i < client_keywords.nwords; i++){
+            //   printf("%s\n", client_keywords.keywords[i]);
+            // }
 
             //printf("word:        %s\n", final_keyword);
 
