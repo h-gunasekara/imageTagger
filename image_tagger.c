@@ -29,6 +29,8 @@ static int const HTTP_400_LENGTH = 47;
 static char const * const HTTP_404 = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
 static int const HTTP_404_LENGTH = 45;
 
+int players_ready=0;
+
 // represents the types of method
 typedef enum
 {
@@ -221,6 +223,7 @@ static bool handle_http_request(int sockfd)
 
           // Discarding the key in the case that the other player isnt ready
 
+          players_ready++;
           printf("THIS IS THE METHOD:    %d\n\n\n\n", method);
           printf("THIS IS THE curr:      %s\n\n\n\n", curr);
           printf("THIS IS THE *curr:     %d\n\n\n\n", *curr);
@@ -239,6 +242,25 @@ static bool handle_http_request(int sockfd)
            final_keyword[added_length + 1] = '\0';
            printf("THIS IS THE FINAL KEYWORD:      %s\n\n\n\n", final_keyword);
            printf("THIS IS THE SOCKFD:      %d\n\n\n\n", sockfd);
+           printf("THIS IS THE number of players ready:      %d\n\n\n\n", players_ready);
+           //if(something is said but other player not ready){
+             //struct stat st;
+
+             // stat("5_discared.html", &st);
+             // increase file size to accommodate the username
+             // long size = st.st_size + added_length;
+             // n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+             // if (write(sockfd, buff, n) < 0)
+             // {
+             //     perror("write");
+             //     return false;
+             // }
+             // int filefd = open("5_discarded.html", O_RDONLY);
+       //  }
+
+
+
+
           // get the size of the file
            //struct stat st;
 
