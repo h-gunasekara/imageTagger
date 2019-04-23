@@ -32,7 +32,7 @@ static int const HTTP_404_LENGTH = 45;
 #define MAXKEYWORDS 20
 #define MAXKEYLENGTH 20
 
-typedef struct {
+struct {
   int sockfd;
   int nwords;
   char keywords[MAXKEYWORDS][MAXKEYLENGTH];
