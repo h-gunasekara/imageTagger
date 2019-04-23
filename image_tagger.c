@@ -241,14 +241,9 @@ static bool handle_http_request(int sockfd)
            char final_keyword[added_length + 1];
            strncpy(final_keyword, keyword, added_length);
            final_keyword[added_length + 1] = '\0';
-           printf("THIS IS THE FINAL KEYWORD:      %s\n\n\n\n", final_keyword);
-           printf("THIS IS THE SOCKFD:      %d\n\n\n\n", sockfd);
-           printf("THIS IS THE number of players ready:      %d\n\n\n\n", players_ready);
            if(players_ready == 1){
              struct stat st;
              stat("5_discared.html", &st);
-          //   increase file size to accommodate the username
-             long size = st.st_size + added_length;
              n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
              if (write(sockfd, buff, n) < 0)
              {
@@ -256,9 +251,7 @@ static bool handle_http_request(int sockfd)
                  return false;
              }
              int filefd = open("5_discarded.html", O_RDONLY);
-             printf("N POST before 2: %d\n", n);
              n = read(filefd, buff, 2048);
-             printf("N POST after 2: %d\n", n);
 
              if (n < 0)
              {
@@ -267,6 +260,36 @@ static bool handle_http_request(int sockfd)
                  return false;
              }
              close(filefd);
+
+        } else if(players_ready == 2) {
+            struct stat st;
+            stat("4_accepted.html", &st);
+            n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+            if (write(sockfd, buff, n) < 0)
+            {
+                perror("write");
+                return false;
+            }
+            int filefd = open("4_accepted.html", O_RDONLY);
+            n = read(filefd, buff, 2048);
+
+            char * keyword = strstr(buff, "keyword=") + 8;
+            int keyword_length = strlen(keyword);
+           // // the length needs to include the ", " before the username
+            long added_length = keyword_length - 12;
+            char final_keyword[added_length + 1];
+            strncpy(final_keyword, keyword, added_length);
+            final_keyword[added_length + 1] = '\0';
+            printf("word:        %s\n", final_keyword);
+
+            if (n < 0)
+            {
+                perror("read");
+                close(filefd);
+                return false;
+            }
+            close(filefd);
+
 
         }
 
