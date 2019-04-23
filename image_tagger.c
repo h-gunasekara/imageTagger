@@ -221,7 +221,7 @@ static bool handle_http_request(int sockfd)
 
           // Discarding the key in the case that the other player isnt ready
 
-          printf("%s\n", method);
+          printf("%d\n", method);
           printf("curr = %s\n", curr);
           printf("*curr = %d\n", *curr);
           printf("%s\n", buff);
