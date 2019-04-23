@@ -29,6 +29,18 @@ static int const HTTP_400_LENGTH = 47;
 static char const * const HTTP_404 = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
 static int const HTTP_404_LENGTH = 45;
 
+#define MAXKEYWORDS 20
+#define MAXKEYLENGTH 20
+
+typedef struct {
+  int sockfd;
+  int nwords;
+  char keywords[MAXKEYWORDS][MAXKEYLENGTH];
+} keyword_t;
+
+struct keyword_t client_keywords;
+
+
 int players_ready=0;
 
 // represents the types of method
@@ -172,7 +184,7 @@ static bool handle_http_request(int sockfd)
             buff[p2++] = ',';
             buff[p2++] = ' ';
             // copy the username
-            strncpy(buff + p2, username, added_length);
+            strncpy(buff + p2, username, username_length);
             if (write(sockfd, buff, size) < 0)
             {
                 perror("write");
@@ -280,6 +292,12 @@ static bool handle_http_request(int sockfd)
             char final_keyword[added_length + 1];
             strncpy(final_keyword, keyword, added_length);
             final_keyword[added_length + 1] = '\0';
+            client_keywords.keywords[client_keywords.nwords] = final_keyword;
+            client_keywords.nwords++;
+            for (int i = 0; i < client_keywords.nwords; i++){
+              printf("%s\n", client_keywords[i]);
+            }
+
             //printf("word:        %s\n", final_keyword);
 
             if (n < 0)
@@ -430,7 +448,10 @@ int main(int argc, char * argv[])
                 {
                     struct sockaddr_in cliaddr;
                     socklen_t clilen = sizeof(cliaddr);
+
                     int newsockfd = accept(sockfd, (struct sockaddr *)&cliaddr, &clilen);
+                    client_keywords.sockfd = newsockfd;
+                    client_keywords.nwords = 0;
                     if (newsockfd < 0)
                         perror("accept");
                     else
