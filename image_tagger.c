@@ -221,7 +221,10 @@ static bool handle_http_request(int sockfd)
 
           // Discarding the key in the case that the other player isnt ready
 
-
+          printf("%s\n", method);
+          printf("curr = %s\n", curr);
+          printf("*curr = %d\n", *curr);
+          printf("%s\n", buff);
           //
           // char * keyword = strstr(buff, "keyword=") + 5;
           // int keyword_length = strlen(keyword);
@@ -229,36 +232,39 @@ static bool handle_http_request(int sockfd)
           // long added_length = keyword_length + 2;
 
           // get the size of the file
-          struct stat st;
+          // struct stat st;
 
-          stat("5_discared.html", &st);
+          // stat("5_discared.html", &st);
           // increase file size to accommodate the username
           // long size = st.st_size + added_length;
 
           // printf("N POST before 1: %d\n", n);
-          n = sprintf(buff, HTTP_200_FORMAT, size);
+          // n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
           // printf("N POST after 1: %d\n", n);
 
           // send the header first
-          if (write(sockfd, buff, n) < 0)
-          {
-              perror("write");
-              return false;
-          }
+          // if (write(sockfd, buff, n) < 0)
+          // {
+          //     perror("write");
+          //     return false;
+          // }
           // read the content of the HTML file
-          int filefd = open("5_discarded.html", O_RDONLY);
+
+
+
+          // int filefd = open("5_discarded.html", O_RDONLY);
 
           // printf("N POST before 2: %d\n", n);
-          n = read(filefd, buff, 2048);
+          // n = read(filefd, buff, 2048);
           // printf("N POST after 2: %d\n", n);
 
-          if (n < 0)
-          {
-              perror("read");
-              close(filefd);
-              return false;
-          }
-          close(filefd);
+          // if (n < 0)
+          // {
+          //     perror("read");
+          //     close(filefd);
+          //     return false;
+          // }
+          // close(filefd);
           // move the trailing part backward
           // int p1, p2;
           // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
