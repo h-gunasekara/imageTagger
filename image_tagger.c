@@ -234,6 +234,10 @@ static bool handle_http_request(int sockfd)
           // // the length needs to include the ", " before the username
            long added_length = keyword_length - 12;
            printf("THIS IS THE KEYWORD LENGTH:      %li\n\n\n\n", added_length);
+           char final_keyword[added_length + 1];
+           strncpy(final_keyword, keyword, added_length);
+           final_keyword[added_length + 1] = '\0';
+           printf("THIS IS THE FINAL KEYWORD:      %s\n\n\n\n", final_keyword);
           // get the size of the file
            //struct stat st;
 
