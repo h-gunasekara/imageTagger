@@ -225,9 +225,11 @@ static bool handle_http_request(int sockfd)
           printf("THIS IS THE curr:      %s\n\n\n\n", curr);
           printf("THIS IS THE *curr:     %d\n\n\n\n", *curr);
           printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
-          //
-          // char * keyword = strstr(buff, "keyword=") + 5;
-          // int keyword_length = strlen(keyword);
+
+
+           char * keyword = strstr(buff, "keyword=") + 5;
+           int keyword_length = strlen(keyword);
+           printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
           // // the length needs to include the ", " before the username
           // long added_length = keyword_length + 2;
 
