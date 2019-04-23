@@ -227,14 +227,15 @@ static bool handle_http_request(int sockfd)
           printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
 
 
-           char * keyword = strstr(buff, "keyword=") + 5;
+           char * keyword = strstr(buff, "keyword=") + 8;
            int keyword_length = strlen(keyword);
            printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
+           printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
           // // the length needs to include the ", " before the username
-          // long added_length = keyword_length + 2;
-
+           long added_length = keyword_length + 12;
+           printf("THIS IS THE KEYWORD LENGTH:      %li\n\n\n\n", added_length);
           // get the size of the file
-          // struct stat st;
+           //struct stat st;
 
           // stat("5_discared.html", &st);
           // increase file size to accommodate the username
