@@ -188,6 +188,7 @@ static bool handle_http_request(int sockfd)
       if (method == GET)
       {
           // get the size of the file
+          players_ready++;
           struct stat st;
           stat("3_first_turn.html", &st);
 
@@ -223,7 +224,7 @@ static bool handle_http_request(int sockfd)
 
           // Discarding the key in the case that the other player isnt ready
 
-          players_ready++;
+
           printf("THIS IS THE METHOD:    %d\n\n\n\n", method);
           printf("THIS IS THE curr:      %s\n\n\n\n", curr);
           printf("THIS IS THE *curr:     %d\n\n\n\n", *curr);
@@ -243,20 +244,31 @@ static bool handle_http_request(int sockfd)
            printf("THIS IS THE FINAL KEYWORD:      %s\n\n\n\n", final_keyword);
            printf("THIS IS THE SOCKFD:      %d\n\n\n\n", sockfd);
            printf("THIS IS THE number of players ready:      %d\n\n\n\n", players_ready);
-           //if(something is said but other player not ready){
-             //struct stat st;
+           if(players_ready == 1){
+             struct stat st;
+             stat("5_discared.html", &st);
+          //   increase file size to accommodate the username
+             long size = st.st_size + added_length;
+             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+             if (write(sockfd, buff, n) < 0)
+             {
+                 perror("write");
+                 return false;
+             }
+             int filefd = open("5_discarded.html", O_RDONLY);
+             printf("N POST before 2: %d\n", n);
+             n = read(filefd, buff, 2048);
+             printf("N POST after 2: %d\n", n);
 
-             // stat("5_discared.html", &st);
-             // increase file size to accommodate the username
-             // long size = st.st_size + added_length;
-             // n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-             // if (write(sockfd, buff, n) < 0)
-             // {
-             //     perror("write");
-             //     return false;
-             // }
-             // int filefd = open("5_discarded.html", O_RDONLY);
-       //  }
+             if (n < 0)
+             {
+                 perror("read");
+                 close(filefd);
+                 return false;
+             }
+             close(filefd);
+
+        }
 
 
 
