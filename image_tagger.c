@@ -49,7 +49,7 @@ static bool handle_http_request(int sockfd)
         if (n < 0)
             perror("read");
         else
-            printf("socket %d close the connection\n", sockfd);
+            //printf("socket %d close the connection\n", sockfd);
         return false;
     }
 
@@ -66,17 +66,17 @@ static bool handle_http_request(int sockfd)
         curr += 4;
         method = GET;
 
-        printf("\nN start GET: %d\n", n);
-        printf("curr = %s\n", curr);
-        printf("*curr = %d\n", *curr);
+        //printf("\nN start GET: %d\n", n);
+        //printf("curr = %s\n", curr);
+        //printf("*curr = %d\n", *curr);
     }
     else if (strncmp(curr, "POST ", 5) == 0)
     {
         curr += 5;
         method = POST;
-        printf("\nN start POST: %d\n", n);
-        printf("curr = %s\n", curr);
-        printf("*curr = %d\n", *curr);
+        //printf("\nN start POST: %d\n", n);
+        //printf("curr = %s\n", curr);
+        //printf("*curr = %d\n", *curr);
     }
     else if (write(sockfd, HTTP_400, HTTP_400_LENGTH) < 0)
     {
@@ -93,11 +93,11 @@ static bool handle_http_request(int sockfd)
         {
             // get the size of the file
             struct stat st;
-            printf("\nN before loop GET: %d\n", n);
+            //printf("\nN before loop GET: %d\n", n);
             stat("1_intro.html", &st);
-            printf("N GET before 1: %d\n", n);
+            //printf("N GET before 1: %d\n", n);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-            printf("N GET after 1: %d\n", n);
+            //printf("N GET after 1: %d\n", n);
             // send the header first
             if (write(sockfd, buff, n) < 0)
             {
@@ -111,9 +111,9 @@ static bool handle_http_request(int sockfd)
             filefd = open("1_intro.html", O_RDONLY);
             do
             {
-                printf("N GET before 2: %d\n", n);
+                //printf("N GET before 2: %d\n", n);
                 n = sendfile(sockfd, filefd, NULL, 2048);
-                printf("N GET after 2: %d\n", n);
+                //printf("N GET after 2: %d\n", n);
             }
             while (n > 0);
             if (n < 0)
@@ -139,9 +139,9 @@ static bool handle_http_request(int sockfd)
             // increase file size to accommodate the username
             long size = st.st_size + added_length;
 
-            printf("N POST before 1: %d\n", n);
+            //printf("N POST before 1: %d\n", n);
             n = sprintf(buff, HTTP_200_FORMAT, size);
-            printf("N POST after 1: %d\n", n);
+            //printf("N POST after 1: %d\n", n);
 
             // send the header first
             if (write(sockfd, buff, n) < 0)
@@ -152,9 +152,9 @@ static bool handle_http_request(int sockfd)
             // read the content of the HTML file
             int filefd = open("2_start.html", O_RDONLY);
 
-            printf("N POST before 2: %d\n", n);
+            //printf("N POST before 2: %d\n", n);
             n = read(filefd, buff, 2048);
-            printf("N POST after 2: %d\n", n);
+            //printf("N POST after 2: %d\n", n);
 
             if (n < 0)
             {
@@ -225,19 +225,19 @@ static bool handle_http_request(int sockfd)
           // Discarding the key in the case that the other player isnt ready
 
 
-          printf("THIS IS THE METHOD:    %d\n\n\n\n", method);
-          printf("THIS IS THE curr:      %s\n\n\n\n", curr);
-          printf("THIS IS THE *curr:     %d\n\n\n\n", *curr);
-          printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
+          //printf("THIS IS THE METHOD:    %d\n\n\n\n", method);
+          //printf("THIS IS THE curr:      %s\n\n\n\n", curr);
+          //printf("THIS IS THE *curr:     %d\n\n\n\n", *curr);
+          //printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
 
 
            char * keyword = strstr(buff, "keyword=") + 8;
            int keyword_length = strlen(keyword);
-           printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
-           printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
+           //printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
+           //printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
           // // the length needs to include the ", " before the username
            long added_length = keyword_length - 12;
-           printf("THIS IS THE KEYWORD LENGTH:      %li\n\n\n\n", added_length);
+           //printf("THIS IS THE KEYWORD LENGTH:      %li\n\n\n\n", added_length);
            char final_keyword[added_length + 1];
            strncpy(final_keyword, keyword, added_length);
            final_keyword[added_length + 1] = '\0';
@@ -280,7 +280,7 @@ static bool handle_http_request(int sockfd)
             char final_keyword[added_length + 1];
             strncpy(final_keyword, keyword, added_length);
             final_keyword[added_length + 1] = '\0';
-            printf("word:        %s\n", final_keyword);
+            //printf("word:        %s\n", final_keyword);
 
             if (n < 0)
             {
@@ -303,9 +303,9 @@ static bool handle_http_request(int sockfd)
           // increase file size to accommodate the username
           // long size = st.st_size + added_length;
 
-          // printf("N POST before 1: %d\n", n);
+          // //printf("N POST before 1: %d\n", n);
           // n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-          // printf("N POST after 1: %d\n", n);
+          // //printf("N POST after 1: %d\n", n);
 
           // send the header first
           if (write(sockfd, buff, n) < 0)
@@ -319,9 +319,9 @@ static bool handle_http_request(int sockfd)
 
           // int filefd = open("5_discarded.html", O_RDONLY);
 
-          // printf("N POST before 2: %d\n", n);
+          // //printf("N POST before 2: %d\n", n);
           // n = read(filefd, buff, 2048);
-          // printf("N POST after 2: %d\n", n);
+          // //printf("N POST after 2: %d\n", n);
 
           // if (n < 0)
           // {
