@@ -170,7 +170,7 @@ static bool handle_http_request(int sockfd)
             buff[p2++] = ',';
             buff[p2++] = ' ';
             // copy the username
-            strncpy(buff + p2, final_username, added_length);
+            strncpy(buff + p2, username, added_length);
             if (write(sockfd, buff, size) < 0)
             {
                 perror("write");
@@ -238,6 +238,7 @@ static bool handle_http_request(int sockfd)
            strncpy(final_keyword, keyword, added_length);
            final_keyword[added_length + 1] = '\0';
            printf("THIS IS THE FINAL KEYWORD:      %s\n\n\n\n", final_keyword);
+           printf("THIS IS THE SOCKFD:      %d\n\n\n\n", sockfd);
           // get the size of the file
            //struct stat st;
 
