@@ -284,7 +284,7 @@ static bool handle_http_request(int sockfd)
             n = read(filefd, buff, 2048);
 
             char * keyword = strstr(buff, "keyword=") + 8;
-            int keyword_length = strlen(keyword);
+            int keyword_length = strlen(keyword) - 12;
             printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
             printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
            // // the length needs to include the ", " before the username
