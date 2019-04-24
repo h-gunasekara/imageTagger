@@ -150,10 +150,10 @@ static bool handle_http_request(int sockfd)
             // increase file size to accommodate the username
             long size = st.st_size + added_length;
 
-            //printf("N POST before 1: %d\n", n);
-            n = sprintf(buff, HTTP_200_FORMAT, size);
-            //printf("N POST after 1: %d\n", n);
 
+            n = sprintf(buff, HTTP_200_FORMAT, size);
+
+            printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
             // send the header first
             if (write(sockfd, buff, n) < 0)
             {
@@ -163,9 +163,9 @@ static bool handle_http_request(int sockfd)
             // read the content of the HTML file
             int filefd = open("2_start.html", O_RDONLY);
 
-            //printf("N POST before 2: %d\n", n);
+
             n = read(filefd, buff, 2048);
-            //printf("N POST after 2: %d\n", n);
+
 
             if (n < 0)
             {
