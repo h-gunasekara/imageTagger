@@ -244,8 +244,7 @@ static bool handle_http_request(int sockfd)
 
            char * keyword = strstr(buff, "keyword=") + 8;
            int keyword_length = strlen(keyword);
-           //printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
-           //printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
+
           // // the length needs to include the ", " before the username
            long added_length = keyword_length - 12;
            //printf("THIS IS THE KEYWORD LENGTH:      %li\n\n\n\n", added_length);
@@ -286,13 +285,15 @@ static bool handle_http_request(int sockfd)
 
             char * keyword = strstr(buff, "keyword=") + 8;
             int keyword_length = strlen(keyword);
+            printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
+            printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
            // // the length needs to include the ", " before the username
             long added_length = keyword_length - 12;
             char final_keyword[MAXKEYLENGTH];
-            strncpy(final_keyword, keyword, MAXKEYLENGTH);
+            strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
-            strncpy(buff, final_keyword, MAXKEYLENGTH);
-            if (write(sockfd, buff, MAXKEYLENGTH) < 0)
+            strncpy(buff, final_keyword, keyword_length);
+            if (write(sockfd, buff, keyword_length) < 0)
             {
                 perror("write");
                 return false;
