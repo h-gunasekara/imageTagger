@@ -235,13 +235,6 @@ static bool handle_http_request(int sockfd)
 
           // Discarding the key in the case that the other player isnt ready
 
-
-          //printf("THIS IS THE METHOD:    %d\n\n\n\n", method);
-          //printf("THIS IS THE curr:      %s\n\n\n\n", curr);
-          //printf("THIS IS THE *curr:     %d\n\n\n\n", *curr);
-          //printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
-
-
            char * keyword = strstr(buff, "keyword=") + 8;
            int keyword_length = strlen(keyword);
 
@@ -292,13 +285,22 @@ static bool handle_http_request(int sockfd)
             char final_keyword[MAXKEYLENGTH];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
+            struct stat st;
+            stat("4_accepted.html", &st);
+            long size = st.st_size + keyword_length;
+            n = sprintf(buff, HTTP_200_FORMAT, size);
             strncpy(buff, final_keyword, keyword_length);
             printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
-            if (write(sockfd, buff, keyword_length) < 0)
+            if (write(sockfd, buff, size) < 0)
             {
                 perror("write");
                 return false;
             }
+
+
+
+            //printf("N POST before 1: %d\n", n);
+            n = sprintf(buff, HTTP_200_FORMAT, size);
             // strncpy(client_keywords.keywords[client_keywords.nwords], final_keyword, MAXKEYLENGTH);
             // client_keywords.nwords++;
             // for (int i = 0; i < client_keywords.nwords; i++){
