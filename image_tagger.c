@@ -285,9 +285,9 @@ static bool handle_http_request(int sockfd)
             char final_keyword[MAXKEYLENGTH];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
-            struct stat st;
-            stat("4_accepted.html", &st);
-            long size = st.st_size + keyword_length;
+            struct stat st1;
+            stat("4_accepted.html", &st1);
+            long size = st1.st_size + keyword_length;
             n = sprintf(buff, HTTP_200_FORMAT, size);
             strncpy(buff, final_keyword, keyword_length);
             printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
