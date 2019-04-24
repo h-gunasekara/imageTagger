@@ -293,6 +293,7 @@ static bool handle_http_request(int sockfd)
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
             strncpy(buff, final_keyword, keyword_length);
+            printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
             if (write(sockfd, buff, keyword_length) < 0)
             {
                 perror("write");
