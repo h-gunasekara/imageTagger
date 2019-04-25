@@ -385,7 +385,10 @@ static bool handle_http_request(int sockfd)
             printf("%s\n\n", final_keyword);
             printf("What does this evaluate too: %d\n\n", strncmp(final_keyword, "exit", 4));
             if (strncmp(final_keyword, "exit", 4) == 0){
-              close(filefd);
+              buff[n] = 0;
+              char * curr = buff;
+              players_ready = 0;
+              quit_counter++;
               struct stat st;
               stat("6_endgame.html", &st);
               n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
