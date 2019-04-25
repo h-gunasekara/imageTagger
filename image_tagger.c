@@ -87,8 +87,7 @@ static bool handle_http_request(int sockfd)
         curr += 5;
         method = POST;
         //printf("\nN start POST: %d\n", n);
-        //printf("curr = %s\n", curr);
-        //printf("*curr = %d\n", *curr);
+
     }
     else if (write(sockfd, HTTP_400, HTTP_400_LENGTH) < 0)
     {
@@ -100,6 +99,10 @@ static bool handle_http_request(int sockfd)
     while (*curr == '.' || *curr == '/')
         ++curr;
     // assume the only valid request URI is "/" but it can be modified to accept more files
+
+    printf("curr = %s\n", curr);
+    printf("*curr = %d\n", *curr);
+
     if (*curr == ' ')
         if (method == GET)
         {
@@ -285,7 +288,7 @@ static bool handle_http_request(int sockfd)
             char final_keyword[MAXKEYLENGTH];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
-            long size = st.st_size + added_length; 
+            long size = st.st_size + added_length;
             int p1, p2;
             for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
                 buff[p1] = buff[p2];
