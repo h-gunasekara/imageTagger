@@ -41,6 +41,7 @@ struct {
 
 
 int players_ready=0;
+int quit_counter=0;
 
 // represents the types of method
 typedef enum
@@ -237,9 +238,9 @@ static bool handle_http_request(int sockfd)
            char * keyword = strstr(buff, "keyword=") + 8;
            int keyword_length = strlen(keyword);
 
-          // // the length needs to include the ", " before the username
+
            long added_length = keyword_length - 12;
-           //printf("THIS IS THE KEYWORD LENGTH:      %li\n\n\n\n", added_length);
+
            char final_keyword[added_length + 1];
            strncpy(final_keyword, keyword, added_length);
            final_keyword[added_length + 1] = '\0';
@@ -284,28 +285,6 @@ static bool handle_http_request(int sockfd)
             char final_keyword[MAXKEYLENGTH];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
-            struct stat st1;
-            stat("4_accepted.html", &st1);
-            long size = st1.st_size + keyword_length;
-            n = sprintf(buff, HTTP_200_FORMAT, size);
-
-            printf("THIS IS THE BUFF:      %s\n\n\n\n", buff);
-            if (write(sockfd, buff, size) < 0)
-            {
-                perror("write");
-                return false;
-            }
-
-            int filefd = open("4_accepted.html", O_RDONLY);
-            n = read(filefd, buff, 2048);
-            if (n < 0)
-            {
-                perror("read");
-                close(filefd);
-                return false;
-            }
-            close(filefd);
-
             int p1, p2;
             for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
                 buff[p1] = buff[p2];
