@@ -602,10 +602,10 @@ int main(int argc, char * argv[])
 
                     int newsockfd = accept(sockfd, (struct sockaddr *)&cliaddr, &clilen);
                     if (!player_1.sockfd){
-                      player_1.sockfd = newsockfd;
+                      player_1.sockfd = sockfd;
                       player_1.nwords = 0;
-                    } else if (player_1.sockfd){
-                      player_2.sockfd = newsockfd;
+                    } else if (player_1.sockfd && !player_2.sockfd){
+                      player_2.sockfd = sockfd;
                       player_2.nwords = 0;
                     }
                     if (newsockfd < 0)
