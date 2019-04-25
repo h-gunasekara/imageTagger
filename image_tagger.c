@@ -53,7 +53,7 @@ typedef enum
 
 static bool handle_http_request(int sockfd)
 {
-    
+
     // try to read the request
     char buff[2049];
     int n = read(sockfd, buff, 2049);
@@ -147,6 +147,28 @@ static bool handle_http_request(int sockfd)
         {
             // locate the username, it is safe to do so in this sample code, but usually the result is expected to be
             // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
+            if (strncmp(curr, "Quit ", 4) == 0) {
+              printf("QUIT\n\n\n");
+              struct stat st;
+              stat("7_gameover.html", &st);
+              n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+              if (write(sockfd, buff, n) < 0)
+              {
+                  perror("write");
+                  return false;
+              }
+              int filefd = open("7_gameover.html", O_RDONLY);
+              n = read(filefd, buff, 2048);
+
+              if (n < 0)
+              {
+                  perror("read");
+                  close(filefd);
+                  return false;
+              }
+              close(filefd);
+
+            }
             char * username = strstr(buff, "user=") + 5;
             int username_length = strlen(username);
             // the length needs to include the ", " before the username
