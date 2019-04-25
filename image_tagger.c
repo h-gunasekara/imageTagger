@@ -327,6 +327,20 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
 
+            if (strncmp("exit", final_keyword, 4)){
+              struct stat st;
+              stat("6_endgame.html", &st);
+              n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+              if (write(sockfd, buff, n) < 0)
+              {
+                  perror("write");
+                  return false;
+              }
+              int filefd = open("6_endgame.html", O_RDONLY);
+              n = read(filefd, buff, 2048);
+
+            }
+
 
             //printf("N POST before 1: %d\n", n);
           //  n = sprintf(buff, HTTP_200_FORMAT, size);
