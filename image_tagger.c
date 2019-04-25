@@ -539,6 +539,7 @@ void image_rotator(int game_count){
   printf("JKKSLBHDHVJDVBHLCDBLKJBDKBCBKDBKDB\n");
   if (f)
   {
+    printf("JKKSLBHDHVJDVBHLCDBLKJBDKBCBKDBKDC\n");
     fseek(f, 0, SEEK_END);
     length = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -547,6 +548,7 @@ void image_rotator(int game_count){
     {
       fread(buffer, 1, length, f);
       printf("%s\n", buffer);
+      printf("JKKSLBHDHVJDVBHLCDBLKJBDKBCBKDBKDD\n");
     }
     fclose(f);
   }
