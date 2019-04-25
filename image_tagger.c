@@ -536,7 +536,7 @@ void image_rotator(int game_count){
   char * buffer = 0;
   long length;
   FILE * f = fopen ("1-intro.html", "rb");
-
+  printf("JKKSLBHDHVJDVBHLCDBLKJBDKBCBKDBKDB\n");
   if (f)
   {
     fseek(f, 0, SEEK_END);
