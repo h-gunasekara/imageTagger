@@ -32,12 +32,14 @@ static int const HTTP_404_LENGTH = 45;
 #define MAXKEYWORDS 20
 #define MAXKEYLENGTH 20
 
-struct {
+typedef struct {
   int sockfd;
   int nwords;
   char keywords[MAXKEYWORDS][MAXKEYLENGTH];
-} client_keywords;
+} keyword_t;
 
+keyword_t player_1;
+keyword_t player_2;
 
 
 int players_ready=0;
@@ -583,8 +585,13 @@ int main(int argc, char * argv[])
                     socklen_t clilen = sizeof(cliaddr);
 
                     int newsockfd = accept(sockfd, (struct sockaddr *)&cliaddr, &clilen);
-                    client_keywords.sockfd = newsockfd;
-                    client_keywords.nwords = 0;
+                    if (!player_1.sockfd){
+                      player_1.sockfd = newsockfd;
+                      player_1.nwords = 0;
+                    } else if (player_1.sockfd){
+                      player_2.sockfd = newsockfd;
+                      player_2.nwords = 0;
+                    }
                     if (newsockfd < 0)
                         perror("accept");
                     else
