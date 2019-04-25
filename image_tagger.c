@@ -326,8 +326,8 @@ static bool handle_http_request(int sockfd)
                 perror("write");
                 return false;
             }
-
-            if (strncmp("exit", final_keyword, 4) == 0){
+            printf("%s\n\n", final_keyword);
+            if (strncmp(final_keyword, "exit", 4) == 0){
               struct stat st;
               stat("6_endgame.html", &st);
               n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
@@ -338,6 +338,14 @@ static bool handle_http_request(int sockfd)
               }
               int filefd = open("6_endgame.html", O_RDONLY);
               n = read(filefd, buff, 2048);
+              if (n < 0)
+              {
+                  perror("read");
+                  close(filefd);
+                  return false;
+              }
+              close(filefd);
+
 
             }
 
