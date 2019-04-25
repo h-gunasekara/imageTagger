@@ -237,7 +237,27 @@ static bool handle_http_request(int sockfd)
           // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
 
           // Discarding the key in the case that the other player isnt ready
+          if (strncmp(curr, "quit ", 4) == 0) {
+            struct stat st;
+            stat("7_gameover.html", &st);
+            n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+            if (write(sockfd, buff, n) < 0)
+            {
+                perror("write");
+                return false;
+            }
+            int filefd = open("7_gameover.html", O_RDONLY);
+            n = read(filefd, buff, 2048);
 
+            if (n < 0)
+            {
+                perror("read");
+                close(filefd);
+                return false;
+            }
+            close(filefd);
+
+          }
            char * keyword = strstr(buff, "keyword=") + 8;
            int keyword_length = strlen(keyword);
 
