@@ -292,7 +292,16 @@ static bool handle_http_request(int sockfd)
              close(filefd);
 
         } else if(players_ready == 2) {
-
+            struct stat st;
+            stat("4_accepted.html", &st);
+            n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+            if (write(sockfd, buff, n) < 0)
+            {
+                perror("write");
+                return false;
+            }
+            int filefd = open("4_accepted.html", O_RDONLY);
+            n = read(filefd, buff, 2048);
 
             char * keyword = strstr(buff, "keyword=") + 8;
             int keyword_length = strlen(keyword) - 12;
@@ -303,17 +312,13 @@ static bool handle_http_request(int sockfd)
             char final_keyword[keyword_length];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
-            struct stat st;
             long size = st.st_size + added_length;
-            stat("4_accepted.html", &st);
             n = sprintf(buff, HTTP_200_FORMAT, size);
             if (write(sockfd, buff, n) < 0)
             {
                 perror("write");
                 return false;
             }
-            int filefd = open("4_accepted.html", O_RDONLY);
-            n = read(filefd, buff, 2048);
             int p1, p2;
             for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
                 buff[p1] = buff[p2];
@@ -322,7 +327,7 @@ static bool handle_http_request(int sockfd)
             buff[p2++] = ',';
             buff[p2++] = ' ';
             strncpy(buff + p2, final_keyword, keyword_length);
-            if (write(sockfd, buff, size) < 0)
+            if (write(sockfd, buff, n) < 0)
             {
                 perror("write");
                 return false;
