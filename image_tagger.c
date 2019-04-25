@@ -301,7 +301,11 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             int filefd = open("4_accepted.html", O_RDONLY);
-            n = read(filefd, buff, 2048);
+            do
+            {
+                n = sendfile(sockfd, filefd, NULL, 2048);
+            }
+            while (n > 0);
             if (n < 0)
             {
                 perror("read");
@@ -334,7 +338,11 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             filefd = open("4_accepted.html", O_RDONLY);
-            n = read(filefd, buff, 2048);
+            do
+            {
+                n = sendfile(sockfd, filefd, NULL, 2048);
+            }
+            while (n > 0);
             if (n < 0)
             {
                 perror("read");
@@ -360,7 +368,6 @@ static bool handle_http_request(int sockfd)
             printf("%s\n\n", final_keyword);
             printf("What does this evaluate too: %d", strncmp(final_keyword, "exit", 4));
             if (strncmp(final_keyword, "exit", 4) == 0){
-              close(filefd);
               struct stat st;
               stat("6_endgame.html", &st);
               n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
