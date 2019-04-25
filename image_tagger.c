@@ -313,12 +313,6 @@ static bool handle_http_request(int sockfd)
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
             long size = st.st_size + added_length;
-            n = sprintf(buff, HTTP_200_FORMAT, size);
-            if (write(sockfd, buff, n) < 0)
-            {
-                perror("write");
-                return false;
-            }
             int p1, p2;
             for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
                 buff[p1] = buff[p2];
@@ -327,12 +321,14 @@ static bool handle_http_request(int sockfd)
             buff[p2++] = ',';
             buff[p2++] = ' ';
             strncpy(buff + p2, final_keyword, keyword_length);
-            if (write(sockfd, buff, n) < 0)
+            if (write(sockfd, buff, size) < 0)
             {
                 perror("write");
                 return false;
             }
+
             printf("%s\n\n", final_keyword);
+            printf("What does this evaluate too: %d", strncmp(final_keyword, "exit", 4));
             if (strncmp(final_keyword, "exit", 4) == 0){
               struct stat st;
               stat("6_endgame.html", &st);
