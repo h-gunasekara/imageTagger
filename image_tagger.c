@@ -302,30 +302,60 @@ static bool handle_http_request(int sockfd)
             }
             int filefd = open("4_accepted.html", O_RDONLY);
             n = read(filefd, buff, 2048);
+            if (n < 0)
+            {
+                perror("read");
+                close(filefd);
+                return false;
+            }
+            close(filefd);
+
+
+
 
             char * keyword = strstr(buff, "keyword=") + 8;
             int keyword_length = strlen(keyword) - 12;
             printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
             printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
-           // // the length needs to include the ", " before the username
-            long added_length = keyword_length;
+            // the length needs to include the ", " before the username
             char final_keyword[keyword_length];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
-            long size = st.st_size + added_length;
+
+
+
+            struct stat st1;
+            long size = st1.st_size + keyword_length;
+            stat("4_accepted.html", &st1);
+            n = sprintf(buff, HTTP_200_FORMAT, size);
+            if (write(sockfd, buff, n) < 0)
+            {
+                perror("write");
+                return false;
+            }
+            int filefd = open("4_accepted.html", O_RDONLY);
+            n = read(filefd, buff, 2048);
+            if (n < 0)
+            {
+                perror("read");
+                close(filefd);
+                return false;
+            }
+            close(filefd);
+
+
+
+
+
             int p1, p2;
-            for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
+            for (p1 = size - 1, p2 = p1 - keyword_length; p1 >= size - 25; --p1, --p2)
                 buff[p1] = buff[p2];
             ++p2;
             // put the separator
             buff[p2++] = ',';
             buff[p2++] = ' ';
             strncpy(buff + p2, final_keyword, keyword_length);
-            if (write(sockfd, buff, size) < 0)
-            {
-                perror("write");
-                return false;
-            }
+
 
             printf("%s\n\n", final_keyword);
             printf("What does this evaluate too: %d", strncmp(final_keyword, "exit", 4));
@@ -347,6 +377,18 @@ static bool handle_http_request(int sockfd)
                   return false;
               }
               close(filefd);
+              if (write(sockfd, buff, size) < 0)
+              {
+                  perror("write");
+                  return false;
+              }
+            if (n < 0)
+            {
+                perror("read");
+                close(filefd);
+                return false;
+            }
+            close(filefd);
 
 
             }
