@@ -533,7 +533,22 @@ static bool handle_http_request(int sockfd)
 }
 
 void image_rotator(int game_count){
-  printf("%d\n\n", open("1_intro.html", O_RDONLY));
+  char * buffer = 0;
+  long length;
+  FILE * f = fopen ("1-intro.html", "rb");
+
+  if (f)
+  {
+    fseek(f, 0, SEEK_END);
+    length = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    buffer = malloc(length);
+    if (buffer)
+    {
+      fread(buffer, 1, length, f);
+    }
+    fclose(f);
+  }
 
 }
 
