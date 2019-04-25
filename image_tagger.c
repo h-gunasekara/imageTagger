@@ -535,7 +535,8 @@ static bool handle_http_request(int sockfd)
 void image_rotator(int game_count){
   char * buffer = 0;
   long length;
-  FILE * f = fopen("1-intro.html", "rb");
+  FILE *f;
+  f = fopen("1-intro.html", "r");
   printf("JKKSLBHDHVJDVBHLCDBLKJBDKBCBKDBKDB\n");
   if (f)
   {
