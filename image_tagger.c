@@ -102,6 +102,9 @@ static bool handle_http_request(int sockfd)
 
     printf("curr = %s\n", curr);
     printf("*curr = %d\n", *curr);
+    if (*curr == "quit" || curr == "quit") {
+      printf("WE ARE QUITTING\n\n\n\n");
+    }
 
     if (*curr == ' ')
         if (method == GET)
