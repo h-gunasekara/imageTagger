@@ -544,12 +544,12 @@ void image_rotator(int game_count){
     fseek(f, 0, SEEK_END);
     length = ftell(f);
     fseek(f, 0, SEEK_SET);
-    buffer = malloc(length + sizeof(int));
+    buffer = malloc(length);
     buff = malloc(length + sizeof(int));
     if (buffer)
     {
       fread(buffer, 1, length, f);
-      sprintf(buffer, buffer, game_count);
+      fprintf(buffer, game_count);
       // char * ending = strstr(buffer, "image-") + 6;
       // int end_length = strlen(ending);
       // int start_length = strlen(buffer) - end_length;
