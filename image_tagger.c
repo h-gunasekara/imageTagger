@@ -316,6 +316,7 @@ static bool handle_http_request(int sockfd)
              close(filefd);
 
         } else if(players_ready == 2) {
+            char *final_keyword;
             struct stat st;
             stat("4_accepted.html", &st);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
@@ -343,8 +344,6 @@ static bool handle_http_request(int sockfd)
             printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
             // the length needs to include the ", " before the username
             final_keyword = (char *) malloc(MAXKEYLENGTH);
-            strcpy(final_keyword, keyword, keyword_length);
-            char final_keyword[keyword_length];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
 
