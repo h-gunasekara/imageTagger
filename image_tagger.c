@@ -238,7 +238,7 @@ static bool handle_http_request(int sockfd)
 
           // Discarding the key in the case that the other player isnt ready
           if (strncmp(curr, "quit ", 4) == 0) {
-            printf("QUIT\n\n\n\");
+            printf("QUIT\n\n\n");
             struct stat st;
             stat("7_gameover.html", &st);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
