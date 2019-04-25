@@ -342,6 +342,8 @@ static bool handle_http_request(int sockfd)
             printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
             printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
             // the length needs to include the ", " before the username
+            final_keyword = (char *) malloc(MAXKEYLENGTH);
+            strcpy(final_keyword, keyword, keyword_length);
             char final_keyword[keyword_length];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
@@ -428,7 +430,7 @@ static bool handle_http_request(int sockfd)
             // }
 
             //printf("word:        %s\n", final_keyword);
-
+            free(final_keyword);
             if (n < 0)
             {
                 perror("read");
