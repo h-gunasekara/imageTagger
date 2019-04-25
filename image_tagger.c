@@ -352,14 +352,14 @@ static bool handle_http_request(int sockfd)
 
             strncpy(player_1.keywords[player_1.nwords], final_keyword, MAXKEYLENGTH);
             player_1.nwords++;
-            printf("PLAYER 1  words:\n", );
+            printf("PLAYER 1  words:\n");
             for (int i = 0; i < player_1.nwords; i++){
               printf("%s\n", player_1.keywords[i]);
             }
 
             strncpy(player_2.keywords[player_2.nwords], final_keyword, MAXKEYLENGTH);
             player_2.nwords++;
-            printf("PLAYER 2  words:\n", );
+            printf("PLAYER 2  words:\n");
             for (int i = 0; i < player_2.nwords; i++){
               printf("%s\n", player_2.keywords[i]);
             }
