@@ -603,7 +603,7 @@ int main(int argc, char * argv[])
                     int newsockfd = accept(sockfd, (struct sockaddr *)&cliaddr, &clilen);
                     if (!player_1.sockfd){
                       player_1.sockfd = sockfd;
-                      printf("player 1:       sockfd:  %d   newsockfd:  %d      maxsockfd:     %d\n\n", sockfd, newsockfd, maxsockfd);
+                      printf("player 1:       sockfd:  %d   newsockfd:  %d      maxfd:     %d\n\n", sockfd, newsockfd, maxfd);
 
                       player_1.nwords = 0;
                     } else if (player_1.sockfd && !player_2.sockfd){
