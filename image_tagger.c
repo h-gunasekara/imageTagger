@@ -327,7 +327,7 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
 
-            if (strncmp("exit", final_keyword, 4)){
+            if (strncmp("exit", final_keyword, 4) == 0){
               struct stat st;
               stat("6_endgame.html", &st);
               n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
