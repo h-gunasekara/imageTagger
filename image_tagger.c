@@ -237,7 +237,7 @@ static bool handle_http_request(int sockfd)
           // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
 
           // Discarding the key in the case that the other player isnt ready
-          if (strncmp(curr, "quit ", 4) == 0) {
+          if (strncmp(curr, "Quit ", 4) == 0) {
             printf("QUIT\n\n\n");
             struct stat st;
             stat("7_gameover.html", &st);
