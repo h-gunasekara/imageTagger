@@ -308,7 +308,7 @@ static bool handle_http_request(int sockfd)
             printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
             printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
            // // the length needs to include the ", " before the username
-            long added_length = keyword_length - 12;
+            long added_length = keyword_length;
             char final_keyword[MAXKEYLENGTH];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
