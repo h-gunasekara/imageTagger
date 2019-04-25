@@ -285,6 +285,7 @@ static bool handle_http_request(int sockfd)
             char final_keyword[MAXKEYLENGTH];
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
+            long size = st.st_size + added_length; 
             int p1, p2;
             for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
                 buff[p1] = buff[p2];
