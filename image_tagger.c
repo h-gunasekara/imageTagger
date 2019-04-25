@@ -86,6 +86,9 @@ static bool handle_http_request(int sockfd)
     {
         curr += 5;
         method = POST;
+        if (curr == "quit") {
+          printf("WE ARE QUITTING\n\n\n\n");
+        }
         //printf("\nN start POST: %d\n", n);
 
     }
@@ -102,9 +105,6 @@ static bool handle_http_request(int sockfd)
 
     printf("curr = %s\n", curr);
     printf("*curr = %d\n", *curr);
-    if (*curr == "quit" || curr == "quit") {
-      printf("WE ARE QUITTING\n\n\n\n");
-    }
 
     if (*curr == ' ')
         if (method == GET)
