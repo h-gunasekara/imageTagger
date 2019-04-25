@@ -32,6 +32,8 @@ static int const HTTP_404_LENGTH = 45;
 #define MAXKEYWORDS 20
 #define MAXKEYLENGTH 20
 
+void image_rotator(int game_count);
+
 typedef struct {
   int sockfd;
   int nwords;
@@ -530,6 +532,11 @@ static bool handle_http_request(int sockfd)
     return true;
 }
 
+void image_rotator(int game_count){
+  printf("%s\n\n", open("1_intro.html"));
+
+}
+
 int main(int argc, char * argv[])
 {
     if (argc < 3)
@@ -537,6 +544,8 @@ int main(int argc, char * argv[])
         fprintf(stderr, "usage: %s ip port\n", argv[0]);
         return 0;
     }
+
+    image_rotator(3);
 
     // create TCP socket which only accept IPv4
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -604,8 +613,8 @@ int main(int argc, char * argv[])
                     if (!player_1.sockfd){
                       player_1.sockfd = sockfd;
                       printf("player 1:       sockfd:  %d   newsockfd:  %d      maxfd:     %d\n\n", sockfd, newsockfd, maxfd);
-
                       player_1.nwords = 0;
+
                     } else if (player_1.sockfd && !player_2.sockfd){
                       player_2.sockfd = sockfd;
                       printf("player 2:       sockfd:  %d   newsockfd:  %d\n\n", sockfd, newsockfd);
