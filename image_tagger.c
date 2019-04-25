@@ -533,7 +533,7 @@ static bool handle_http_request(int sockfd)
 }
 
 void image_rotator(int game_count){
-  printf("%s\n\n", open("1_intro.html"));
+  printf("%s\n\n", open("1_intro.html", O_RDONLY));
 
 }
 
