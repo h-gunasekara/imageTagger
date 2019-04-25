@@ -546,12 +546,9 @@ void image_rotator(int game_count){
     if (buffer)
     {
       fread(buffer, 1, length, f);
+      printf("%s\n", buffer);
     }
     fclose(f);
-  }
-  if (buffer)
-  {
-    printf("%s\n", buffer);
   }
 
 }
