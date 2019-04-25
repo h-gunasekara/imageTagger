@@ -53,6 +53,7 @@ typedef enum
 
 static bool handle_http_request(int sockfd)
 {
+    //scrap that
     // try to read the request
     char buff[2049];
     int n = read(sockfd, buff, 2049);
