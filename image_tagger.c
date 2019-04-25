@@ -147,7 +147,8 @@ static bool handle_http_request(int sockfd)
         {
             // locate the username, it is safe to do so in this sample code, but usually the result is expected to be
             // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
-            if (strncmp(curr, "Quit ", 4) == 0) {
+            printf("how simislar is this vlaue to quit%d\n\n\n\n", strncmp(curr, "quit ", 4));
+            if (strncmp(curr, "quit ", 4) == 0) {
               printf("QUIT\n\n\n");
               struct stat st;
               stat("7_gameover.html", &st);
