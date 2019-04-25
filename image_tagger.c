@@ -545,7 +545,7 @@ void image_rotator(int game_count){
     length = ftell(f);
     fseek(f, 0, SEEK_SET);
     buffer = malloc(length);
-    buffer = malloc(length + sizeof(int));
+    buff = malloc(length + sizeof(int));
     if (buffer)
     {
       fread(buffer, 1, length, f);
