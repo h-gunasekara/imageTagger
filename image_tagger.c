@@ -325,15 +325,15 @@ static bool handle_http_request(int sockfd)
 
 
             struct stat st1;
-            long size = st1.st_size + keyword_length;
             stat("4_accepted.html", &st1);
+            long size = st1.st_size + keyword_length;
             n = sprintf(buff, HTTP_200_FORMAT, size);
             if (write(sockfd, buff, n) < 0)
             {
                 perror("write");
                 return false;
             }
-            int filefd = open("4_accepted.html", O_RDONLY);
+            filefd = open("4_accepted.html", O_RDONLY);
             n = read(filefd, buff, 2048);
             if (n < 0)
             {
