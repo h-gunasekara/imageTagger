@@ -547,7 +547,7 @@ void image_rotator(int game_count){
     if (buffer)
     {
       fread(buffer, 1, length, f);
-      char * ending = strstr(buff, "image-") + 6;
+      char * ending = strstr(buffer, "image-") + 6;
       int ending_length = strlen(ending);
       printf("Size of ending:  %d\n", ending_length);
       printf("%s\n", buffer);
