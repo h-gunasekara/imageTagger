@@ -326,7 +326,7 @@ static bool handle_http_request(int sockfd)
 
             struct stat st1;
             stat("4_accepted.html", &st1);
-            long size = st1.st_size + keyword_length;
+            long size = st1.st_size + keyword_length + 1;
             n = sprintf(buff, HTTP_200_FORMAT, size);
             if (write(sockfd, buff, n) < 0)
             {
@@ -354,12 +354,12 @@ static bool handle_http_request(int sockfd)
             // put the separator
             buff[p2++] = ',';
             buff[p2++] = ' ';
-            strncpy(buff + p2, keyword, keyword_length);
+            strncpy(buff + p2, final_keyword, keyword_length);
 
 
-            printf("%s\n\n", keyword);
-            printf("What does this evaluate too: %d", strncmp(keyword, "exit", 4));
-            if (strncmp(keyword, "exit", 4) == 0){
+            printf("%s\n\n", final_keyword);
+            printf("What does this evaluate too: %d\n\n", strncmp(final_keyword, "exit", 4));
+            if (strncmp(final_keyword, "exit", 4) == 0){
               close(filefd);
               struct stat st;
               stat("6_endgame.html", &st);
