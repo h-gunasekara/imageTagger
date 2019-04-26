@@ -176,6 +176,7 @@ static bool handle_http_request(int sockfd)
             }
             char * username = strstr(buff, "user=") + 5;
             int username_length = strlen(username);
+            char *final_username;
             // the length needs to include the ", " before the username
             final_username = (char *) malloc(MAXKEYLENGTH);
             strncpy(final_username, username, username_length);
@@ -299,9 +300,11 @@ static bool handle_http_request(int sockfd)
 
            long added_length = keyword_length - 12;
 
-           char final_keyword[added_length + 1];
-           strncpy(final_keyword, keyword, added_length);
-           final_keyword[added_length + 1] = '\0';
+           char *final_keyword;
+           final_keyword = (char *) malloc(MAXKEYLENGTH);
+           strncpy(final_keyword, keyword, keyword_length);
+           final_keyword[keyword_length + 1] = '\0';
+
            if(players_ready == 1){
              struct stat st;
              stat("5_discared.html", &st);
