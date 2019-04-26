@@ -580,7 +580,7 @@ int main(int argc, char * argv[])
         return 0;
     }
 
-    image_rotator(3);
+    //image_rotator(3);
 
     // create TCP socket which only accept IPv4
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
