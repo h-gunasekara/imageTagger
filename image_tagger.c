@@ -242,6 +242,7 @@ static bool handle_http_request(int sockfd)
             }
             close(filefd);
           }
+          char *final_keyword;
           char * keyword = strstr(buff, "keyword=") + 8;
           int keyword_length = strlen(keyword);
           long added_length = keyword_length - 12;
