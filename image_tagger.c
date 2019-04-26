@@ -20,7 +20,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-// constants
+// constantsss
 static char const * const HTTP_200_FORMAT = "HTTP/1.1 200 OK\r\n\
 Content-Type: text/html\r\n\
 Content-Length: %ld\r\n\r\n";
