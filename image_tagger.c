@@ -37,7 +37,7 @@ void image_rotator(int game_count);
 typedef struct {
   int sockfd;
   int nwords;
-  char keywords[MAXKEYWORDS][MAXKEYLENGTH];
+  char **keywords;
 } keyword_t;
 
 keyword_t player_1;
