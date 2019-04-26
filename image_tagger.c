@@ -559,4 +559,4 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-static bool send_pages(int sockfd, )
+//static bool send_pages(int sockfd, )
