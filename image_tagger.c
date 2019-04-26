@@ -37,7 +37,7 @@ void image_rotator(int game_count);
 typedef struct {
   int sockfd;
   int nwords;
-  char keywords[MAXKEYWORDS][MAXKEYLENGTH];
+  char **keywords;
 } keyword_t;
 
 keyword_t player_1;
@@ -108,8 +108,8 @@ static bool handle_http_request(int sockfd)
         ++curr;
     // assume the only valid request URI is "/" but it can be modified to accept more files
 
-    printf("curr = %s\n", curr);
-    printf("*curr = %d\n", *curr);
+    //printf("curr = %s\n", curr);
+    //printf("*curr = %d\n", *curr);
 
     if (*curr == ' ')
         if (method == GET)
@@ -177,6 +177,9 @@ static bool handle_http_request(int sockfd)
             char * username = strstr(buff, "user=") + 5;
             int username_length = strlen(username);
             // the length needs to include the ", " before the username
+            final_username = (char *) malloc(MAXKEYLENGTH);
+            strncpy(final_username, username, username_length);
+            final_username[username_length + 1] = '\0'
             long added_length = username_length + 2;
 
             // get the size of the file
@@ -351,23 +354,23 @@ static bool handle_http_request(int sockfd)
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
 
-
-            strncpy(player_1.keywords[player_1.nwords], final_keyword, MAXKEYLENGTH);
-            player_1.nwords++;
-            printf("PLAYER 1  words:\n");
-            printf("PLAYER 1  socket:  %d\n", player_1.sockfd);
-            for (int i = 0; i < player_1.nwords; i++){
-              printf("%s\n", player_1.keywords[i]);
+            if (i == player_1.sockfd){
+              strncpy(player_1.keywords[player_1.nwords], final_keyword, MAXKEYLENGTH);
+              player_1.nwords++;
+              printf("PLAYER 1  words:\n");
+              printf("PLAYER 1  socket:  %d\n", player_1.sockfd);
+              for (int i = 0; i < player_1.nwords; i++){
+                printf("%s\n", player_1.keywords[i]);
+              }
+            } else {
+              strncpy(player_2.keywords[player_2.nwords], final_keyword, MAXKEYLENGTH);
+              player_2.nwords++;
+              printf("PLAYER 2  words:\n");
+              printf("PLAYER 2  socket:  %d\n", player_2.sockfd);
+              for (int i = 0; i < player_2.nwords; i++){
+                printf("%s\n", player_2.keywords[i]);
+              }
             }
-
-            strncpy(player_2.keywords[player_2.nwords], final_keyword, MAXKEYLENGTH);
-            player_2.nwords++;
-            printf("PLAYER 2  words:\n");
-            printf("PLAYER 2  socket:  %d\n", player_2.sockfd);
-            for (int i = 0; i < player_2.nwords; i++){
-              printf("%s\n", player_2.keywords[i]);
-            }
-
 
             struct stat st1;
             stat("4_accepted.html", &st1);
@@ -638,14 +641,22 @@ int main(int argc, char * argv[])
 
                     int newsockfd = accept(sockfd, (struct sockaddr *)&cliaddr, &clilen);
                     if (!player_1.sockfd){
-                      player_1.sockfd = sockfd;
+                      player_1.sockfd = newsockfd;
                       printf("player 1:       sockfd:  %d   newsockfd:  %d      maxfd:     %d\n\n", sockfd, newsockfd, maxfd);
                       player_1.nwords = 0;
+                      player_1.keywords = malloc(MAXKEYWORDS * sizeof(char*));
+                      for(int i = 0; i < MAXKEYWORDS; i++){
+                        player_1.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
+                      }
 
                     } else if (player_1.sockfd && !player_2.sockfd){
-                      player_2.sockfd = sockfd;
+                      player_2.sockfd = newsockfd;
                       printf("player 2:       sockfd:  %d   newsockfd:  %d\n\n", sockfd, newsockfd);
                       player_2.nwords = 0;
+                      player_2.keywords = malloc(MAXKEYWORDS * sizeof(char*));
+                      for(int i = 0; i < MAXKEYWORDS; i++){
+                        player_2.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
+                      }
                     }
                     if (newsockfd < 0)
                         perror("accept");
