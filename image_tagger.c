@@ -37,7 +37,7 @@ void image_rotator(int game_count);
 typedef struct {
   int sockfd;
   int nwords;
-  char **keywords;
+  char keywords[MAXKEYWORDS][MAXKEYLENGTH];
 } keyword_t;
 
 keyword_t player_1;
@@ -151,7 +151,7 @@ static bool handle_http_request(int sockfd)
         {
             // locate the username, it is safe to do so in this sample code, but usually the result is expected to be
             // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
-            printf("how simislar is this vlaue to quit%d\n\n\n\n", strncmp(curr, "quit ", 4));
+            //printf("how simislar is this vlaue to quit%d\n\n\n\n", strncmp(curr, "quit ", 4));
             if (strncmp(curr, "quit ", 4) == 0) {
               printf("QUIT\n\n\n");
               struct stat st;
