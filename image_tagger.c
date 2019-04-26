@@ -179,7 +179,7 @@ static bool handle_http_request(int sockfd)
             // the length needs to include the ", " before the username
             final_username = (char *) malloc(MAXKEYLENGTH);
             strncpy(final_username, username, username_length);
-            final_username[username_length + 1] = '\0'
+            final_username[username_length + 1] = '\0';
             long added_length = username_length + 2;
 
             // get the size of the file
@@ -354,7 +354,7 @@ static bool handle_http_request(int sockfd)
             strncpy(final_keyword, keyword, keyword_length);
             final_keyword[keyword_length + 1] = '\0';
 
-            if (i == player_1.sockfd){
+            if (sockfd == player_1.sockfd){
               strncpy(player_1.keywords[player_1.nwords], final_keyword, MAXKEYLENGTH);
               player_1.nwords++;
               printf("PLAYER 1  words:\n");
