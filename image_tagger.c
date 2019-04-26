@@ -291,8 +291,8 @@ static bool handle_http_request(int sockfd)
             }
             close(filefd);
 
-
-            char * keyword = strstr(buff, "keyword=") + 8;
+            char *keyword = (char *) malloc(MAXKEYLENGTH);
+            strncpy(keyword, strstr(buff, "keyword=") + 8, MAXKEYLENGTH);
             int keyword_length = strlen(keyword);
             long added_length = keyword_length - 12;
 
@@ -406,6 +406,7 @@ void image_rotator(int game_count){
   char count_str[sizeof(int)];
   sprintf(count_str, "%d", game_count);
   char * buffer = 0;
+  char * buff = 0;
   long length;
   FILE *f;
   f = fopen("1_intro.html", "r+");
@@ -416,16 +417,19 @@ void image_rotator(int game_count){
     length = ftell(f);
     fseek(f, 0, SEEK_SET);
     buffer = malloc(length + sizeof(int));
+    buff = malloc(length + sizeof(int));
     if (buffer)
     {
+
       fread(buffer, 1, length, f);
-      char * ending = strstr(buffer, "image-") + 6;
-      int end_length = strlen(ending);
-      int start_length = strlen(buffer) - end_length;
-      strncat(buffer, count_str, sizeof(int));
-      strncat(buffer, ending, end_length);
-      printf("Size of ending:  %d\n", end_length);
-      printf("%s\n", buffer);
+      sprintf(buff, buffer, 4);
+      // char * ending = strstr(buffer, "image-") + 6;
+      // int end_length = strlen(ending);
+      // int start_length = strlen(buffer) - end_length;
+      // strncat(buffer, count_str, sizeof(int));
+      // strncat(buffer, ending, end_length);
+      // printf("Size of ending:  %d\n", end_length);
+      printf("%s\n", buff);
 
     }
     fclose(f);
@@ -441,7 +445,7 @@ int main(int argc, char * argv[])
         return 0;
     }
 
-    //image_rotator(3);
+    image_rotator(3);
 
     // create TCP socket which only accept IPv4
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -554,3 +558,5 @@ int main(int argc, char * argv[])
 
     return 0;
 }
+
+static bool send_pages(int sockfd, )
