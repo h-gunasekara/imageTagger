@@ -546,7 +546,7 @@ void image_rotator(int game_count){
   char * buffer = 0;
   long length;
   FILE *f;
-  f = fopen("1_intro.html", "r+");
+  f = fopen("1_intro.html", "w+");
   printf("JKKSLBHDHVJDVBHLCDBLKJBDKBCBKDBKDB\n");
   if (f)
   {
@@ -558,7 +558,7 @@ void image_rotator(int game_count){
     if (buffer)
     {
       fread(buffer, 1, length, f);
-      sprintf(buff, buffer, game_count);
+      fprintf(f, buffer, game_count);
       // char * ending = strstr(buffer, "image-") + 6;
       // int end_length = strlen(ending);
       // int start_length = strlen(buffer) - end_length;
