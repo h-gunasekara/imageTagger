@@ -305,7 +305,7 @@ static bool handle_http_request(int sockfd)
 
             printf("player 1:       %d  player 2:       %d   sockfd:        %d\n\n", player_1.sockfd, player_2.sockfd, sockfd);
             if (sockfd == player_1.sockfd){
-              strncpy(player_1.keywords[player_1.nwords], final_keyword, keyword_length);
+              strncpy(player_1.keywords[player_1.nwords], final_keyword, keyword_length+1);
               player_1.nwords++;
               printf("PLAYER 1  words:\n");
               printf("PLAYER 1  socket:  %d\n", player_1.sockfd);
@@ -313,7 +313,7 @@ static bool handle_http_request(int sockfd)
                 printf("%s\n", player_1.keywords[i]);
               }
             } else {
-              strncpy(player_2.keywords[player_2.nwords], final_keyword, keyword_length);
+              strncpy(player_2.keywords[player_2.nwords], final_keyword, keyword_length+1);
               player_2.nwords++;
               printf("PLAYER 2  words:\n");
               printf("PLAYER 2  socket:  %d\n", player_2.sockfd);
@@ -348,9 +348,9 @@ static bool handle_http_request(int sockfd)
             // put the separator
             buff[p2++] = ',';
             buff[p2++] = ' ';
-            strncpy(buff + p2, final_keyword, keyword_length);
+            //strncpy(buff + p2, final_keyword, keyword_length);
 
-            printf("%s\n\n", final_keyword);
+            printf("\nThe current word is: %s\n\n", final_keyword);
             printf("What does this evaluate too: %d\n\n", strncmp(final_keyword, "exit", 4));
             if (strncmp(final_keyword, "exit", 4) == 0){
               buff[n] = 0;
@@ -367,13 +367,6 @@ static bool handle_http_request(int sockfd)
               }
               int filefd = open("6_endgame.html", O_RDONLY);
               n = read(filefd, buff, 2048);
-            if (n < 0)
-            {
-                perror("read");
-                close(filefd);
-                return false;
-            }
-            close(filefd);
             }
 
             if (n < 0)
