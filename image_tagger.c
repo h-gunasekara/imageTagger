@@ -294,44 +294,43 @@ static bool handle_http_request(int sockfd)
             close(filefd);
 
           }
-           char * keyword = strstr(buff, "keyword=") + 8;
-           int keyword_length = strlen(keyword);
+          char *final_keyword;
+          final_keyword = (char *) malloc(MAXKEYLENGTH);
+          final_keyword = strstr(buff, "keyword=") + 8;
+          int keyword_length = strlen(final_keyword);
 
 
-           long added_length = keyword_length - 12;
+          long added_length = keyword_length - 12;
 
-           char *final_keyword;
-           final_keyword = (char *) malloc(MAXKEYLENGTH);
-           strncpy(final_keyword, keyword, keyword_length);
-           final_keyword[keyword_length + 1] = '\0';
+          final_keyword[keyword_length + 1] = '\0';
 
-           if(players_ready == 1){
-             struct stat st;
-             stat("5_discared.html", &st);
-             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-             if (write(sockfd, buff, n) < 0)
-             {
-                 perror("write");
-                 return false;
-             }
-             int filefd = open("5_discarded.html", O_RDONLY);
-             n = read(filefd, buff, 2048);
-
-             if (n < 0)
-             {
-                 perror("read");
-                 close(filefd);
-                 return false;
-             }
-             close(filefd);
-
-        } else if(players_ready == 2) {
-            char *final_keyword;
+          if(players_ready == 1){
             struct stat st;
-            stat("4_accepted.html", &st);
+            stat("5_discared.html", &st);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
             if (write(sockfd, buff, n) < 0)
             {
+               perror("write");
+               return false;
+            }
+            int filefd = open("5_discarded.html", O_RDONLY);
+            n = read(filefd, buff, 2048);
+
+           if (n < 0)
+           {
+               perror("read");
+               close(filefd);
+               return false;
+           }
+           close(filefd);
+
+         } else if(players_ready == 2) {
+           char *final_keyword;
+           struct stat st;
+           stat("4_accepted.html", &st);
+           n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+           if (write(sockfd, buff, n) < 0)
+           {
                 perror("write");
                 return false;
             }
@@ -346,11 +345,17 @@ static bool handle_http_request(int sockfd)
             close(filefd);
 
 
+            final_keyword = (char *) malloc(MAXKEYLENGTH);
+            final_keyword = strstr(buff, "keyword=") + 8;
+            int keyword_length = strlen(final_keyword);
 
 
-            char * keyword = strstr(buff, "keyword=") + 8;
-            int keyword_length = strlen(keyword) - 12;
-            printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
+            long added_length = keyword_length - 12;
+
+            final_keyword[keyword_length + 1] = '\0';
+
+
+            printf("THIS IS THE FINAL KEYWORD:      %s\n\n\n\n", final_keyword);
             printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
             // the length needs to include the ", " before the username
             // final_keyword = (char *) malloc(MAXKEYLENGTH);
@@ -359,8 +364,7 @@ static bool handle_http_request(int sockfd)
 
             printf("player 1:       %d  player 2:       %d   sockfd:        %d\n\n", player_1.sockfd, player_2.sockfd, sockfd);
             if (sockfd == player_1.sockfd){
-              strncpy(player_1.keywords[player_1.nwords], keyword, keyword_length);
-              player_1.keywords[player_1.nwords][keyword_length + 1] = '\0';
+              strncpy(player_1.keywords[player_1.nwords], final_keyword, keyword_length);
               player_1.nwords++;
               printf("PLAYER 1  words:\n");
               printf("PLAYER 1  socket:  %d\n", player_1.sockfd);
@@ -368,8 +372,7 @@ static bool handle_http_request(int sockfd)
                 printf("%s\n", player_1.keywords[i]);
               }
             } else {
-              strncpy(player_2.keywords[player_2.nwords], keyword, keyword_length);
-              player_2.keywords[player_2.nwords][keyword_length + 1] = '\0';
+              strncpy(player_2.keywords[player_2.nwords], final_keyword, keyword_length);
               player_2.nwords++;
               printf("PLAYER 2  words:\n");
               printf("PLAYER 2  socket:  %d\n", player_2.sockfd);
@@ -649,19 +652,19 @@ int main(int argc, char * argv[])
                       player_1.sockfd = newsockfd;
                       printf("player 1:       sockfd:  %d   newsockfd:  %d      maxfd:     %d\n\n", sockfd, newsockfd, maxfd);
                       player_1.nwords = 0;
-                      player_1.keywords = malloc(MAXKEYWORDS * sizeof(char*));
-                      for(int i = 0; i < MAXKEYWORDS; i++){
-                        player_1.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
-                      }
+                      // player_1.keywords = malloc(MAXKEYWORDS * sizeof(char*));
+                      // for(int i = 0; i < MAXKEYWORDS; i++){
+                      //   player_1.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
+                      // }
 
                     } else if (player_1.sockfd && !player_2.sockfd){
                       player_2.sockfd = newsockfd;
                       printf("player 2:       sockfd:  %d   newsockfd:  %d\n\n", sockfd, newsockfd);
                       player_2.nwords = 0;
-                      player_2.keywords = malloc(MAXKEYWORDS * sizeof(char*));
-                      for(int i = 0; i < MAXKEYWORDS; i++){
-                        player_2.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
-                      }
+                      // player_2.keywords = malloc(MAXKEYWORDS * sizeof(char*));
+                      // for(int i = 0; i < MAXKEYWORDS; i++){
+                      //   player_2.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
+                      // }
                     }
                     if (newsockfd < 0)
                         perror("accept");
