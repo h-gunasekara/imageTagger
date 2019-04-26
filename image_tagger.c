@@ -542,7 +542,8 @@ static bool handle_http_request(int sockfd)
 }
 
 void image_rotator(int game_count){
-  char * buff = 0;
+  char count_str[sizeof(int)];
+  sprintf(count_str, "%d", game_count);
   char * buffer = 0;
   long length;
   FILE *f;
@@ -554,19 +555,16 @@ void image_rotator(int game_count){
     length = ftell(f);
     fseek(f, 0, SEEK_SET);
     buffer = malloc(length + sizeof(int));
-    buff = malloc(length + sizeof(int));
     if (buffer)
     {
       fread(buffer, 1, length, f);
-      sprintf(buff, buffer, game_count);
-      fprintf(f, buff, game_count);
-      // char * ending = strstr(buffer, "image-") + 6;
-      // int end_length = strlen(ending);
-      // int start_length = strlen(buffer) - end_length;
-      // strncat(buffer, count_str, sizeof(int));
-      // strncat(buffer, ending, end_length);
-      // printf("Size of ending:  %d\n", end_length);
-      printf("%s\n", buff);
+      char * ending = strstr(buffer, "image-") + 6;
+      int end_length = strlen(ending);
+      int start_length = strlen(buffer) - end_length;
+      strncat(buffer, count_str, sizeof(int));
+      strncat(buffer, ending, end_length);
+      printf("Size of ending:  %d\n", end_length);
+      printf("%s\n", buffer);
 
     }
     fclose(f);
