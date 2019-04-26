@@ -546,7 +546,7 @@ void image_rotator(int game_count){
   char * buffer = 0;
   long length;
   FILE *f;
-  f = fopen("1_intro.html", "w+");
+  f = fopen("1_intro.html", "r+");
   printf("JKKSLBHDHVJDVBHLCDBLKJBDKBCBKDBKDB\n");
   if (f)
   {
