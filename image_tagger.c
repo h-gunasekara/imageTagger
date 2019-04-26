@@ -242,15 +242,16 @@ static bool handle_http_request(int sockfd)
             }
             close(filefd);
           }
-          char *final_keyword;
-          final_keyword = (char *) malloc(MAXKEYLENGTH);
-          final_keyword = strstr(buff, "keyword=") + 8;
-          int keyword_length = strlen(final_keyword);
+          char * keyword = strstr(buff, "keyword=") + 8;
+          int keyword_length = strlen(keyword);
           long added_length = keyword_length - 12;
+          final_keyword = (char *) malloc(MAXKEYLENGTH);
+          strncpy(final_keyword, keyword, added_length);
           final_keyword[keyword_length + 1] = '\0';
 
           if(players_ready == 1){
             struct stat st;
+            free(final_keyword);
             stat("5_discared.html", &st);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
             if (write(sockfd, buff, n) < 0)
@@ -290,8 +291,8 @@ static bool handle_http_request(int sockfd)
             close(filefd);
 
 
-            keyword = strstr(buff, "keyword=") + 8;
-            int keyword_length = strlen(keyoword);
+            char * keyword = strstr(buff, "keyword=") + 8;
+            int keyword_length = strlen(keyword);
             long added_length = keyword_length - 12;
 
             printf("THIS IS THE FINAL KEYWORD:      %s\n\n\n\n", final_keyword);
