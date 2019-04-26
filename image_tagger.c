@@ -20,7 +20,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-// constantsss
+// constantsssg
 static char const * const HTTP_200_FORMAT = "HTTP/1.1 200 OK\r\n\
 Content-Type: text/html\r\n\
 Content-Length: %ld\r\n\r\n";
@@ -66,36 +66,25 @@ static bool handle_http_request(int sockfd)
         if (n < 0)
             perror("read");
         else
-            //printf("socket %d close the connection\n", sockfd);
         return false;
     }
 
     // terminate the string
     buff[n] = 0;
-
     char * curr = buff;
-
 
     // parse the method
     METHOD method = UNKNOWN;
-    if (strncmp(curr, "GET ", 4) == 0)
-    {
+    if (strncmp(curr, "GET ", 4) == 0) {
         curr += 4;
         method = GET;
 
-        //printf("\nN start GET: %d\n", n);
-        //printf("curr = %s\n", curr);
-        //printf("*curr = %d\n", *curr);
-    }
-    else if (strncmp(curr, "POST ", 5) == 0)
-    {
+    } else if (strncmp(curr, "POST ", 5) == 0) {
         curr += 5;
         method = POST;
         if (curr == "quit") {
           printf("WE ARE QUITTING\n\n\n\n");
         }
-        //printf("\nN start POST: %d\n", n);
-
     }
     else if (write(sockfd, HTTP_400, HTTP_400_LENGTH) < 0)
     {
@@ -107,73 +96,38 @@ static bool handle_http_request(int sockfd)
     while (*curr == '.' || *curr == '/')
         ++curr;
     // assume the only valid request URI is "/" but it can be modified to accept more files
-
     //printf("curr = %s\n", curr);
     //printf("*curr = %d\n", *curr);
-
     if (*curr == ' ')
         if (method == GET)
         {
             // get the size of the file
             struct stat st;
-            //printf("\nN before loop GET: %d\n", n);
             stat("1_intro.html", &st);
-            //printf("N GET before 1: %d\n", n);
             n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-            //printf("N GET after 1: %d\n", n);
             // send the header first
-            if (write(sockfd, buff, n) < 0)
-            {
+            if (write(sockfd, buff, n) < 0) {
                 perror("write");
                 return false;
             }
             // send the file
-
             int filefd;
-
             filefd = open("1_intro.html", O_RDONLY);
             do
             {
-                //printf("N GET before 2: %d\n", n);
                 n = sendfile(sockfd, filefd, NULL, 2048);
-                //printf("N GET after 2: %d\n", n);
             }
             while (n > 0);
-            if (n < 0)
-            {
+            if (n < 0) {
                 perror("sendfile");
                 close(filefd);
                 return false;
             }
             close(filefd);
         }
-        else if (method == POST)
-        {
+        else if (method == POST) {
             // locate the username, it is safe to do so in this sample code, but usually the result is expected to be
             // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
-            //printf("how simislar is this vlaue to quit%d\n\n\n\n", strncmp(curr, "quit ", 4));
-            if (strncmp(curr, "quit ", 4) == 0) {
-              printf("QUIT\n\n\n");
-              struct stat st;
-              stat("7_gameover.html", &st);
-              n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-              if (write(sockfd, buff, n) < 0)
-              {
-                  perror("write");
-                  return false;
-              }
-              int filefd = open("7_gameover.html", O_RDONLY);
-              n = read(filefd, buff, 2048);
-
-              if (n < 0)
-              {
-                  perror("read");
-                  close(filefd);
-                  return false;
-              }
-              close(filefd);
-
-            }
             char * username = strstr(buff, "user=") + 5;
             int username_length = strlen(username);
             char *final_username;
@@ -240,9 +194,7 @@ static bool handle_http_request(int sockfd)
           players_ready++;
           struct stat st;
           stat("3_first_turn.html", &st);
-
           n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-
           // send the header first
           if (write(sockfd, buff, n) < 0)
           {
@@ -250,9 +202,7 @@ static bool handle_http_request(int sockfd)
               return false;
           }
           // send the file
-
           int filefd = open("3_first_turn.html", O_RDONLY);
-
           do
           {
               n = sendfile(sockfd, filefd, NULL, 2048);
@@ -284,7 +234,6 @@ static bool handle_http_request(int sockfd)
             }
             int filefd = open("7_gameover.html", O_RDONLY);
             n = read(filefd, buff, 2048);
-
             if (n < 0)
             {
                 perror("read");
@@ -292,16 +241,12 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             close(filefd);
-
           }
           char *final_keyword;
           final_keyword = (char *) malloc(MAXKEYLENGTH);
           final_keyword = strstr(buff, "keyword=") + 8;
           int keyword_length = strlen(final_keyword);
-
-
           long added_length = keyword_length - 12;
-
           final_keyword[keyword_length + 1] = '\0';
 
           if(players_ready == 1){
@@ -345,22 +290,16 @@ static bool handle_http_request(int sockfd)
             close(filefd);
 
 
-            final_keyword = (char *) malloc(MAXKEYLENGTH);
-            final_keyword = strstr(buff, "keyword=") + 8;
-            int keyword_length = strlen(final_keyword);
-
-
+            keyword = strstr(buff, "keyword=") + 8;
+            int keyword_length = strlen(keyoword);
             long added_length = keyword_length - 12;
-
-            final_keyword[keyword_length + 1] = '\0';
-
 
             printf("THIS IS THE FINAL KEYWORD:      %s\n\n\n\n", final_keyword);
             printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
-            // the length needs to include the ", " before the username
-            // final_keyword = (char *) malloc(MAXKEYLENGTH);
-            // strncpy(final_keyword, keyword, keyword_length);
-            // final_keyword[keyword_length + 1] = '\0';
+        //    the length needs to include the ", " before the username
+            final_keyword = (char *) malloc(MAXKEYLENGTH);
+            strncpy(final_keyword, keyword, added_length);
+            final_keyword[keyword_length + 1] = '\0';
 
             printf("player 1:       %d  player 2:       %d   sockfd:        %d\n\n", player_1.sockfd, player_2.sockfd, sockfd);
             if (sockfd == player_1.sockfd){
@@ -400,10 +339,6 @@ static bool handle_http_request(int sockfd)
             }
             close(filefd);
 
-
-
-
-
             int p1, p2;
             for (p1 = size - 1, p2 = p1 - keyword_length; p1 >= size - 25; --p1, --p2)
                 buff[p1] = buff[p2];
@@ -412,7 +347,6 @@ static bool handle_http_request(int sockfd)
             buff[p2++] = ',';
             buff[p2++] = ' ';
             strncpy(buff + p2, final_keyword, keyword_length);
-
 
             printf("%s\n\n", final_keyword);
             printf("What does this evaluate too: %d\n\n", strncmp(final_keyword, "exit", 4));
@@ -431,18 +365,6 @@ static bool handle_http_request(int sockfd)
               }
               int filefd = open("6_endgame.html", O_RDONLY);
               n = read(filefd, buff, 2048);
-              if (n < 0)
-              {
-                  perror("read");
-                  close(filefd);
-                  return false;
-              }
-              close(filefd);
-              if (write(sockfd, buff, size) < 0)
-              {
-                  perror("write");
-                  return false;
-              }
             if (n < 0)
             {
                 perror("read");
@@ -450,21 +372,8 @@ static bool handle_http_request(int sockfd)
                 return false;
             }
             close(filefd);
-
-
             }
 
-
-            //printf("N POST before 1: %d\n", n);
-          //  n = sprintf(buff, HTTP_200_FORMAT, size);
-            // strncpy(client_keywords.keywords[client_keywords.nwords], final_keyword, MAXKEYLENGTH);
-            // client_keywords.nwords++;
-            // for (int i = 0; i < client_keywords.nwords; i++){
-            //   printf("%s\n", client_keywords.keywords[i]);
-            // }
-
-            //printf("word:        %s\n", final_keyword);
-            free(final_keyword);
             if (n < 0)
             {
                 perror("read");
@@ -475,21 +384,6 @@ static bool handle_http_request(int sockfd)
 
 
         }
-
-
-
-
-          // get the size of the file
-           //struct stat st;
-
-          // stat("5_discared.html", &st);
-          // increase file size to accommodate the username
-          // long size = st.st_size + added_length;
-
-          // //printf("N POST before 1: %d\n", n);
-          // n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-          // //printf("N POST after 1: %d\n", n);
-
           // send the header first
           if (write(sockfd, buff, n) < 0)
           {
@@ -497,37 +391,6 @@ static bool handle_http_request(int sockfd)
               return false;
           }
           // read the content of the HTML file
-
-
-
-          // int filefd = open("5_discarded.html", O_RDONLY);
-
-          // //printf("N POST before 2: %d\n", n);
-          // n = read(filefd, buff, 2048);
-          // //printf("N POST after 2: %d\n", n);
-
-          // if (n < 0)
-          // {
-          //     perror("read");
-          //     close(filefd);
-          //     return false;
-          // }
-          // close(filefd);
-          // move the trailing part backward
-          // int p1, p2;
-          // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
-          //     buff[p1] = buff[p2];
-          // ++p2;
-          // // put the separator
-          // buff[p2++] = ',';
-          // buff[p2++] = ' ';
-          // copy the username
-          // strncpy(buff + p2, keyword, keyword_length);
-          // if (write(sockfd, buff, size) < 0)
-          // {
-              // perror("write");
-              // return false;
-          // }
       }
       else
           // never used, just for completeness
