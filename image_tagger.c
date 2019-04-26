@@ -649,19 +649,19 @@ int main(int argc, char * argv[])
                       player_1.sockfd = newsockfd;
                       printf("player 1:       sockfd:  %d   newsockfd:  %d      maxfd:     %d\n\n", sockfd, newsockfd, maxfd);
                       player_1.nwords = 0;
-                      player_1.keywords = malloc(MAXKEYWORDS * sizeof(char*));
-                      for(int i = 0; i < MAXKEYWORDS; i++){
-                        player_1.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
-                      }
+                      // player_1.keywords = malloc(MAXKEYWORDS * sizeof(char*));
+                      // for(int i = 0; i < MAXKEYWORDS; i++){
+                      //   player_1.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
+                      // }
 
                     } else if (player_1.sockfd && !player_2.sockfd){
                       player_2.sockfd = newsockfd;
                       printf("player 2:       sockfd:  %d   newsockfd:  %d\n\n", sockfd, newsockfd);
                       player_2.nwords = 0;
-                      player_2.keywords = malloc(MAXKEYWORDS * sizeof(char*));
-                      for(int i = 0; i < MAXKEYWORDS; i++){
-                        player_2.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
-                      }
+                      // player_2.keywords = malloc(MAXKEYWORDS * sizeof(char*));
+                      // for(int i = 0; i < MAXKEYWORDS; i++){
+                      //   player_2.keywords[i] = malloc((MAXKEYLENGTH + 1) * sizeof(char));
+                      // }
                     }
                     if (newsockfd < 0)
                         perror("accept");
