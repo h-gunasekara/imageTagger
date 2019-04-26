@@ -353,12 +353,14 @@ static bool handle_http_request(int sockfd)
             printf("THIS IS THE KEYWORD:      %s\n\n\n\n", keyword);
             printf("THIS IS THE KEYWORD LENGTH:       %d\n\n\n\n", keyword_length);
             // the length needs to include the ", " before the username
-            final_keyword = (char *) malloc(MAXKEYLENGTH);
-            strncpy(final_keyword, keyword, keyword_length);
-            final_keyword[keyword_length + 1] = '\0';
+            // final_keyword = (char *) malloc(MAXKEYLENGTH);
+            // strncpy(final_keyword, keyword, keyword_length);
+            // final_keyword[keyword_length + 1] = '\0';
 
+            printf("player 1:       %d  player 2:       %d   sockfd:        %d\n\n", player_1.sockfd, player_2.sockfd, sockfd);
             if (sockfd == player_1.sockfd){
-              strncpy(player_1.keywords[player_1.nwords], final_keyword, MAXKEYLENGTH);
+              strncpy(player_1.keywords[player_1.nwords], keyword, keyword_length);
+              player_1.keywords[player_1.nwords][keyword_length + 1] = '\0';
               player_1.nwords++;
               printf("PLAYER 1  words:\n");
               printf("PLAYER 1  socket:  %d\n", player_1.sockfd);
@@ -366,7 +368,8 @@ static bool handle_http_request(int sockfd)
                 printf("%s\n", player_1.keywords[i]);
               }
             } else {
-              strncpy(player_2.keywords[player_2.nwords], final_keyword, MAXKEYLENGTH);
+              strncpy(player_2.keywords[player_2.nwords], keyword, keyword_length);
+              player_2.keywords[player_2.nwords][keyword_length + 1] = '\0';
               player_2.nwords++;
               printf("PLAYER 2  words:\n");
               printf("PLAYER 2  socket:  %d\n", player_2.sockfd);
