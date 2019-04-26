@@ -238,7 +238,7 @@ int main(int argc, char * argv[])
     FD_SET(sockfd, &masterfds);
     // record the maximum socket number
     int maxfd = sockfd;
-
+    player_t* players = malloc(sizeof(player_t) * 2);
     while (1)
     {
         // monitor file descriptors
