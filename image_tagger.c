@@ -29,6 +29,9 @@ static int const HTTP_400_LENGTH = 47;
 static char const * const HTTP_404 = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
 static int const HTTP_404_LENGTH = 45;
 
+#define MAXKEYWORDS 20
+#define MAXKEYLENGTH 20
+
 // represents the types of method
 typedef enum
 {
@@ -36,6 +39,27 @@ typedef enum
     POST,
     UNKNOWN
 } METHOD;
+
+typedef struct
+{
+  int sockfd;
+  char* name;
+  char* guesses[MAXKEYLENGTH];
+  int num_guesses;
+  int playing;
+  int finished;
+} player_t;
+
+
+#define INTRO "1_intro.html"
+#define START "2_start.html"
+#define TURN "3_first_turn.html"
+#define ACCEPTED "4_accepted.html"
+#define DISCARDED "5_discarded.html"
+#define END "6_endgame.html"
+#define GAMEOVER "7_gameover.html"
+
+static bool send_pages(int sockfd, int n, char* buffer, char* page);
 
 static bool handle_http_request(int sockfd)
 {
@@ -265,4 +289,28 @@ int main(int argc, char * argv[])
     }
 
     return 0;
+}
+
+static bool send_pages(int sockfd, int n, char* buffer, char* page) {
+  struct stat st;
+  stat(page, &st);
+  // increase file size to accommodate the username
+  n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+  // send the header first
+  if (write(sockfd, buff, n) < 0)
+  {
+      perror("write");
+      return false;
+  }
+  // read the content of the HTML file
+  int filefd = open(page, O_RDONLY);
+  n = read(filefd, buff, 2048);
+  if (n < 0)
+  {
+      perror("read");
+      close(filefd);
+      return false;
+  }
+  close(filefd);
+
 }
