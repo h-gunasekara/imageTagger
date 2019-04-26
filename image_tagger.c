@@ -44,6 +44,7 @@ typedef struct
 {
   int sockfd;
   char* name;
+  int name_len;
   char* guesses[MAXKEYLENGTH];
   int num_guesses;
   int playing;
