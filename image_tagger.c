@@ -118,7 +118,7 @@ static bool handle_http_request(int sockfd, player_t* players)
           for (int i = 0; i < 2; ++i){
             if (players[i].sockfd == sockfd){
               players[i].playing = 1;
-              playing[i].finished = 0;
+              players[i].finished = 0;
               printf("YOU HAVE JUST STARTED PLAYING THE GAME\n");
             }
           }
