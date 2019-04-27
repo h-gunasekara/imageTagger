@@ -181,11 +181,13 @@ static bool handle_http_request(int sockfd, player_t* players)
               other = j - i;
               players[other].finished = 1;
               players[other].playing = 0;
+              printf("If this prints we are finished.\n");
               //reset all stats here
               return send_page(players[other].sockfd, n, buff, END);
         		}
         		if (players[i].sockfd == sockfd)
         		{
+              printf("If this prints a keyword has been entered.\n");
         			players[i].guesses[players[i].num_guesses] = strdup(keyword);
         			players[i].num_guesses++;
               other = j - i;
@@ -193,20 +195,21 @@ static bool handle_http_request(int sockfd, player_t* players)
               {
                 if (strcmp(players[other].guesses[guess], keyword) == 0)
                 {
+                  printf("If this prints the keyword is in the other players list and the player is finished.\n");
                   players[i].finished = 1;
                   players[i].playing = 0;
                   //reset all stats here
                   return send_page(sockfd, n, buff, END);
                 }
               }
+              rintf("If this prints then the key word has been accepted.\n");
               return send_page(sockfd, n, buff, ACCEPTED);
             }
             }
-          }
-
+        }
         else if ((strstr(buff, "keyword=") != NULL))
         {
-        	return send_page(sockfd, n, buff, DISCARDED);
+      	  return send_page(sockfd, n, buff, DISCARDED);
         }
         // int p1, p2;
         // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
