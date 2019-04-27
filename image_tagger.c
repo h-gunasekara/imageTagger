@@ -202,7 +202,7 @@ static bool handle_http_request(int sockfd, player_t* players)
                   return send_page(sockfd, n, buff, END);
                 }
               }
-              rintf("If this prints then the key word has been accepted.\n");
+              printf("If this prints then the key word has been accepted.\n");
               return send_page(sockfd, n, buff, ACCEPTED);
             }
             }
