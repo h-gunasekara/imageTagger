@@ -190,8 +190,14 @@ static bool handle_http_request(int sockfd, player_t* players)
               printf("If this prints a keyword has been entered.\n");
         			players[i].guesses[players[i].num_guesses] = strdup(keyword);
               printf("keyword that has been inputted:   '%s'\n", players[i].guesses[players[i].num_guesses]);
-              printf("Guesses made by the other player:\n");
               printf("the number of guesses made by you is:   '%d'\n", players[i].num_guesses);
+              printf("Guesses made by you:\n");
+              for (int guess = 0; guess < players[i].num_guesses; ++guess)
+              {
+                printf("%s\n", players[other].guesses[guess]);
+              }
+
+              printf("\n\n\Guesses made by the other player:\n");
               printf("the number of guesses made by the other player is:   '%d'\n", players[other].num_guesses);
         			players[i].num_guesses++;
               other = j - i;
