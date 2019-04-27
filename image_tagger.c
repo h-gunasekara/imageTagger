@@ -109,32 +109,20 @@ static bool handle_http_request(int sockfd, player_t* players)
     if (method == GET)
     {
         // get the size of the file
-        if (*curr == ' '){
+        if (*curr == ' ')
+        {
           return send_page(sockfd, n, buff, INTRO);
-        }
-        struct stat st;
-        stat("lab6-GET.html", &st);
-        n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
-        // send the header first
-        if (write(sockfd, buff, n) < 0)
+
+        } else if (strstr(buff, "start=Start") != NULL)
         {
-            perror("write");
-            return false;
+          for (int i = 0; i < 2; ++i){
+            if (players[i].sockfd == sockfd){
+              players[i].ingame = 1;
+            }
+          }
+          return send_page(sockfd, n, buff, TURN);
         }
-        // send the file
-        int filefd = open("lab6-GET.html", O_RDONLY);
-        do
-        {
-            n = sendfile(sockfd, filefd, NULL, 2048);
-        }
-        while (n > 0);
-        if (n < 0)
-        {
-            perror("sendfile");
-            close(filefd);
-            return false;
-        }
-        close(filefd);
+
     }
     else if (method == POST)
     {
