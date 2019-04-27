@@ -198,6 +198,7 @@ static bool handle_http_request(int sockfd, player_t* players)
           int i = 0;
           other = 1;
           if (players[i].sockfd == sockfd){
+            printf("Your sockfd is:   '%d'\n", players[i].sockfd);
             printf("the number of guesses made by you is:   '%d'\n", players[i].num_guesses);
             printf("Guesses made by you:\n");
             for (int guess = 0; guess < players[i].num_guesses; ++guess)
@@ -205,6 +206,7 @@ static bool handle_http_request(int sockfd, player_t* players)
               printf("%s\n", players[i].guesses[guess]);
             }
 
+            printf("Your sockfd is:   '%d'\n", players[other]].sockfd);
             printf("\n\nGuesses made by the other player:\n");
             printf("the number of guesses made by the other player is:   '%d'\n", players[other].num_guesses);
             for (int guess = 0; guess < players[other].num_guesses; ++guess)
