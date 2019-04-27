@@ -161,11 +161,11 @@ static bool handle_http_request(int sockfd, player_t* players)
             if (players[i].sockfd == sockfd)
             {
               players[i].playing = 0;
+              players[i].finshed = 1;
               printf("%s logged out on %d\n", players[i].name, sockfd);
             }
-        }
-        return send_page(sockfd, n, buff, GAMEOVER);
-
+          }
+          return send_page(sockfd, n, buff, GAMEOVER);
         }
 
         else if ((strstr(buff, "keyword=") != NULL) && players[0].playing == 1 && players[1].playing == 1)
@@ -181,15 +181,15 @@ static bool handle_http_request(int sockfd, player_t* players)
               players[other].finished = 1;
               players[other].playing = 0;
               //reset all stats here
-              send_page(sockfd, n, buff, END);
+              send_page(players[other].sockfd, n, buff, END);
         		}
         		if (players[i].sockfd == sockfd)
         		{
         			players[i].guesses[players[i].num_guesses] = strdup(keyword);
         			players[i].num_guesses++;
-              for (int i = 0; i < players[other].num_guesses; ++i)
+              for (int guess = 0; guess < players[other].num_guesses; ++guess)
               {
-                if (strcmp(players[j].guesses[i], keyword) == 0)
+                if (strcmp(players[other].guesses[guess], keyword) == 0)
                 {
                   players[i].finished = 1;
                   players[i].playing = 0;
