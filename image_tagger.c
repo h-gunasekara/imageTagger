@@ -194,11 +194,11 @@ static bool handle_http_request(int sockfd, player_t* players)
             other = j - i;
             }
           }
+          
+          int i = 0;
+          other = 1;
           printf("the number of guesses made by you is:   '%d'\n", players[i].num_guesses);
           printf("Guesses made by you:\n");
-
-          int i = 0;
-          int other = 1;
           for (int guess = 0; guess < players[i].num_guesses; ++guess)
           {
             printf("%s\n", players[i].guesses[guess]);
