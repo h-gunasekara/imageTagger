@@ -168,7 +168,7 @@ static bool handle_http_request(int sockfd, player_t* players)
           return send_page(sockfd, n, buff, GAMEOVER);
         }
 
-        else if ((strstr(buff, "keyword=") != NULL) && players[0].playing == 1 && players[1].playing == 1)
+        else if ((strstr(buff, "keyword=") != NULL) && players[0].playing == 1 && players[1].playing == 1 && players[0].finished == 0 && players[1].finished == 0)
         {
         	char * keyword = strstr(buff, "keyword=") + 8;
           int keyword_length = strlen(keyword) - 12;
@@ -197,33 +197,36 @@ static bool handle_http_request(int sockfd, player_t* players)
             }
           }
 
-          int i = 0;
-          other = 1;
-          if (players[i].sockfd == sockfd){
-            for (int guess = 0; guess < players[other].num_guesses; ++guess)
-            {
-              if (strcmp(players[other].guesses[guess], players[i].guesses[players[i].num_guesses] - 1) == 0)
-              {
-                players[i].finished = 1;
-                players[i].playing = 0;
-                //reset all stats here
-                return send_page(sockfd, n, buff, END);
-              }
-            }
-          } else if (players[other].sockfd == sockfd){
 
-
-            for (int guess = 0; guess < players[i].num_guesses; ++guess)
-            {
-              if (strcmp(players[i].guesses[guess], players[other].guesses[players[other].num_guesses - 1]) == 0)
+          int other;
+          for (int i = 0; i < 2; ++i)
+        	{
+            other = 1 - i;
+            if (players[i].sockfd == sockfd){
+              for (int guess = 0; guess < players[other].num_guesses; ++guess)
               {
-                players[other].finished = 1;
-                players[other].playing = 0;
-                //reset all stats here
-                return send_page(sockfd, n, buff, END);
+                if (strcmp(players[other].guesses[guess], players[i].guesses[players[i].num_guesses] - 1) == 0)
+                {
+                  players[i].finished = 1;
+                  players[i].playing = 0;
+                  //reset all stats here
+                  return send_page(sockfd, n, buff, END);
+                }
               }
             }
           }
+          // else if (players[other].sockfd == sockfd){
+          //   for (int guess = 0; guess < players[i].num_guesses; ++guess)
+          //   {
+          //     if (strcmp(players[i].guesses[guess], players[other].guesses[players[other].num_guesses - 1]) == 0)
+          //     {
+          //       players[other].finished = 1;
+          //       players[other].playing = 0;
+          //       //reset all stats here
+          //       return send_page(sockfd, n, buff, END);
+          //     }
+          //   }
+          // }
 
 
 
@@ -233,7 +236,21 @@ static bool handle_http_request(int sockfd, player_t* players)
         }
         else if ((strstr(buff, "keyword=") != NULL))
         {
-      	  return send_page(sockfd, n, buff, DISCARDED);
+          int other;
+          for (int i = 0; i < 2; ++i)
+        	{
+            other = 1 - i;
+        		if (players[other].finished == 1)
+        		{
+              players[i].finished = 1;
+              players[i].playing = 0;
+        			return send_page(sockfd, n, buff, END);
+        		}
+            else if (players[other].playing == 0)
+            {
+              return send_page(sockfd, n, buff, DISCARDED);
+            }
+
         }
         // int p1, p2;
         // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
