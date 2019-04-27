@@ -120,9 +120,9 @@ static bool handle_http_request(int sockfd, player_t* players)
             if (players[i].sockfd == sockfd){
               players[i].playing = 1;
               if (players[i].finished == 1){
-                  players[i].finished = 0;
                   players[i].nextgame = 1;
               }
+              players[i].finished = 0;
 
               printf("YOU HAVE JUST STARTED PLAYING THE GAME\n");
             }
@@ -217,7 +217,6 @@ static bool handle_http_request(int sockfd, player_t* players)
                 {
                   players[i].finished = 1;
                   players[i].playing = 0;
-                  players[other].playing = 0;
                   for (int remove = 0; remove <= players[i].num_guesses; ++remove)
                   {
                     free(players[i].guesses[remove]);
