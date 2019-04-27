@@ -60,7 +60,7 @@ typedef struct
 #define END "6_endgame.html"
 #define GAMEOVER "7_gameover.html"
 
-static bool send_pages(int sockfd, int n, char* buff, char* page);
+static bool send_page(int sockfd, int n, char* buff, char* page);
 
 static bool handle_http_request(int sockfd, player_t* players)
 {
@@ -297,7 +297,7 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-static bool send_pages(int sockfd, int n, char* buff, char* page) {
+static bool send_page(int sockfd, int n, char* buff, char* page) {
   struct stat st;
   stat(page, &st);
   // increase file size to accommodate the username
