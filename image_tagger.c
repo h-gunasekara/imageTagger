@@ -161,7 +161,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             if (players[i].sockfd == sockfd)
             {
               players[i].playing = 0;
-              players[i].finished = 1;
+    //          players[i].finished = 1;
               printf("%s logged out on %d\n", players[i].name, sockfd);
             }
           }
@@ -179,11 +179,11 @@ static bool handle_http_request(int sockfd, player_t* players)
         		if (players[i].finished == 1)
         		{
               other = j - i;
-              players[other].finished = 1;
-              players[other].playing = 0;
+    //          players[other].finished = 1;
+    //          players[other].playing = 0;
               printf("If this prints we are finished.\n");
               //reset all stats here
-              return send_page(players[other].sockfd, n, buff, END);
+              return send_page(sockfd, n, buff, END);
         		}
         		if (players[i].sockfd == sockfd)
         		{
@@ -197,7 +197,7 @@ static bool handle_http_request(int sockfd, player_t* players)
                 {
                   printf("If this prints the keyword is in the other players list and the player is finished.\n");
                   players[i].finished = 1;
-                  players[i].playing = 0;
+    //              players[i].playing = 0;
                   //reset all stats here
                   return send_page(sockfd, n, buff, END);
                 }
