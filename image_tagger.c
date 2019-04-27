@@ -261,10 +261,10 @@ static bool handle_http_request(int sockfd, player_t* players)
                 }
                 return send_page(sockfd, n, buff, END);
 
-            } else {
-              return send_page(sockfd, n, buff, DISCARDED);
             }
+
           }
+          return send_page(sockfd, n, buff, DISCARDED);
         }
 
 
