@@ -139,7 +139,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             players[0].name = strdup(username);
             players[0].name_len = username_length;
             players[0].playing = 0;
-            players[0].num.guesses = 0;
+            players[0].num_guesses = 0;
             players[0].finished = 0;
           }
           else
