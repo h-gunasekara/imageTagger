@@ -240,18 +240,6 @@ static bool handle_http_request(int sockfd, player_t* players)
           printf("If this prints then the key word has been accepted.\n");
           return send_page(sockfd, n, buff, ACCEPTED);
         }
-        else if ((strstr(buff, "keyword=") != NULL) && (players[0].playing == 0 || players[1].playing == 0))
-        {
-          int other;
-          for (int i = 0; i < 2; ++i)
-        	{
-            other = 1 - i;
-            if (players[other].playing == 0)
-            {
-              return send_page(sockfd, n, buff, DISCARDED);
-            }
-          }
-        }
         else if ((strstr(buff, "keyword=") != NULL) && (players[0].finished == 1 || players[1].finished == 1))
         {
           int other;
@@ -260,7 +248,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             other = 1- i;
             if (players[i].finished == 0 && players[other].finished == 1)
             {
-              players[i].finished = 1;  
+              players[i].finished = 1;
 
               for (int remove = 0; remove <= players[i].num_guesses; ++remove)
               {
@@ -269,6 +257,18 @@ static bool handle_http_request(int sockfd, player_t* players)
               return send_page(sockfd, n, buff, END);
             }
         }
+        }
+        else if ((strstr(buff, "keyword=") != NULL) && (players[0].playing == 0 || players[1].playing == 0))
+        {
+          int other;
+          for (int i = 0; i < 2; ++i)
+          {
+            other = 1 - i;
+            if (players[other].playing == 0)
+            {
+              return send_page(sockfd, n, buff, DISCARDED);
+            }
+          }
         }
 
 
