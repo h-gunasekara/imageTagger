@@ -1,4 +1,4 @@
-/*
+selfself/*
 ** http-server.c
 */
 
@@ -183,33 +183,33 @@ static bool handle_http_request(int sockfd, player_t* players)
         	int j = 1;
           int other;
 
-        	for (int i = 0; i < 2; ++i)
+        	for (int self = 0; self < 2; ++self)
         	{
-        		if (players[i].sockfd == sockfd)
+        		if (players[self].sockfd == sockfd)
         		{
-              players[i].guesses[players[i].num_guesses] = strndup(keyword, keyword_length);
-              players[i].num_guesses++;
-              other = j - i;
+              players[self].guesses[players[self].num_guesses] = strndup(keyword, keyword_length);
+              players[self].num_guesses++;
+              other = j - self;
             }
           }
 
 
-          for (int i = 0; i < 2; ++i)
+          for (int self = 0; self < 2; ++self)
         	{
-            other = 1 - i;
-            if (players[i].sockfd == sockfd){
+            other = 1 - self;
+            if (players[self].sockfd == sockfd){
               for (int guess = 0; guess < players[other].num_guesses; ++guess)
               {
-                if (strcmp(players[other].guesses[guess], players[i].guesses[players[i].num_guesses - 1]) == 0)
+                if (strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]) == 0)
                 {
-                  players[i].finished = 1;
-                  players[i].nextgame = 0;
-                  players[i].playing = 0;
+                  players[self].finished = 1;
+                  players[self].nextgame = 0;
+                  players[self].playing = 0;
                   players[other].playing = 0;
                   players[other].nextgame = 0;
-                  for (int remove = 0; remove <= players[i].num_guesses; ++remove)
+                  for (int remove = 0; remove <= players[self].num_guesses; ++remove)
                   {
-                    free(players[i].guesses[remove]);
+                    free(players[self].guesses[remove]);
                   }
                   for (int remove = 0; remove <= players[other].num_guesses; ++remove)
                   {
