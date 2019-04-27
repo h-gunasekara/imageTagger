@@ -154,20 +154,20 @@ static bool handle_http_request(int sockfd, player_t* players)
           return send_page(sockfd, n, buff, START);
         }
 
-        int p1, p2;
-        for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
-            buff[p1] = buff[p2];
-        ++p2;
-        // put the separator
-        buff[p2++] = ',';
-        buff[p2++] = ' ';
-        // copy the username
-        strncpy(buff + p2, username, username_length);
-        if (write(sockfd, buff, size) < 0)
-        {
-            perror("write");
-            return false;
-        }
+        // int p1, p2;
+        // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
+        //     buff[p1] = buff[p2];
+        // ++p2;
+        // // put the separator
+        // buff[p2++] = ',';
+        // buff[p2++] = ' ';
+        // // copy the username
+        // strncpy(buff + p2, username, username_length);
+        // if (write(sockfd, buff, size) < 0)
+        // {
+        //     perror("write");
+        //     return false;
+        // }
       }
     // send 404
     else if (write(sockfd, HTTP_404, HTTP_404_LENGTH) < 0)
