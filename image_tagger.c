@@ -118,13 +118,11 @@ static bool handle_http_request(int sockfd, player_t* players)
         {
           for (int i = 0; i < 2; ++i){
             if (players[i].sockfd == sockfd){
-              players[i].playing = 1;
               if (players[i].finished == 1){
                   players[i].nextgame = 1;
               }
+              players[i].playing = 1;
               players[i].finished = 0;
-
-              printf("YOU HAVE JUST STARTED PLAYING THE GAME\n");
             }
           }
           return send_page(sockfd, n, buff, TURN);
@@ -187,20 +185,9 @@ static bool handle_http_request(int sockfd, player_t* players)
 
         	for (int i = 0; i < 2; ++i)
         	{
-        		if (players[i].finished == 1)
-        		{
-              other = j - i;
-    //          players[other].finished = 1;
-    //          players[other].playing = 0;
-              printf("If this prints we are finished.\n");
-              //reset all stats here
-    //          return send_page(sockfd, n, buff, END);
-        		}
         		if (players[i].sockfd == sockfd)
         		{
               players[i].guesses[players[i].num_guesses] = strndup(keyword, keyword_length);
-              printf("If this prints a keyword has been entered.\n");
-              printf("keyword that has been inputted:   '%s'\n", players[i].guesses[players[i].num_guesses]);
               players[i].num_guesses++;
               other = j - i;
             }
@@ -216,11 +203,17 @@ static bool handle_http_request(int sockfd, player_t* players)
                 if (strcmp(players[other].guesses[guess], players[i].guesses[players[i].num_guesses - 1]) == 0)
                 {
                   players[i].finished = 1;
+                  players[i].nextgame = 0;
                   players[i].playing = 0;
                   players[other].playing = 0;
+                  players[other].nextgame = 0;
                   for (int remove = 0; remove <= players[i].num_guesses; ++remove)
                   {
                     free(players[i].guesses[remove]);
+                  }
+                  for (int remove = 0; remove <= players[other].num_guesses; ++remove)
+                  {
+                    free(players[other].guesses[remove]);
                   }
                   //reset all stats here
                   return send_page(sockfd, n, buff, END);
@@ -228,23 +221,7 @@ static bool handle_http_request(int sockfd, player_t* players)
               }
             }
           }
-          // else if (players[other].sockfd == sockfd){
-          //   for (int guess = 0; guess < players[i].num_guesses; ++guess)
-          //   {
-          //     if (strcmp(players[i].guesses[guess], players[other].guesses[players[other].num_guesses - 1]) == 0)
-          //     {
-          //       players[other].finished = 1;
-          //       players[other].playing = 0;
-          //       //reset all stats here
-          //       return send_page(sockfd, n, buff, END);
-          //     }
-          //   }
-          // }
 
-
-
-
-          printf("If this prints then the key word has been accepted.\n");
           return send_page(sockfd, n, buff, ACCEPTED);
         }
         else if (strstr(buff, "keyword=") != NULL) {
@@ -252,13 +229,8 @@ static bool handle_http_request(int sockfd, player_t* players)
           int other;
           for (int self = 0; self < 2; ++self){
             other = 1 - self;
-            printf("\n\nThe value of self finished =  %d, The value of other finished = %d, The value of other nextgame = %d\n\n", players[self].finished, players[other].finished, players[other].nextgame);
             if ((players[self].finished == 0 && players[self].nextgame == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
                 players[self].finished = 1;
-                for (int remove = 0; remove <= players[self].num_guesses; ++remove)
-                {
-                  free(players[self].guesses[remove]);
-                }
                 return send_page(sockfd, n, buff, END);
 
             }
