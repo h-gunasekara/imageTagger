@@ -204,7 +204,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             if (players[i].sockfd == sockfd){
               for (int guess = 0; guess < players[other].num_guesses; ++guess)
               {
-                if (strcmp(players[other].guesses[guess], players[i].guesses[players[i].num_guesses] - 1) == 0)
+                if (strcmp(players[other].guesses[guess], players[i].guesses[players[i].num_guesses - 1]) == 0)
                 {
                   players[i].finished = 1;
                   players[i].playing = 0;
