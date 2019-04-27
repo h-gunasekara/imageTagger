@@ -154,6 +154,57 @@ static bool handle_http_request(int sockfd, player_t* players)
           return send_page(sockfd, n, buff, START);
         }
 
+        else if (strstr(buff, "quit=Quit") != NULL)
+        {
+          for (int i = 0; i < 2; ++i)
+          {
+            if (players[i].sockfd == sockfd)
+            {
+              players[i].playing = 0;
+              printf("%s logged out on %d\n", players[i].name, sockfd);
+            }
+        }
+        return send_page(sockfd, n, buff, GAMEOVER);
+
+        }
+
+        else if ((strstr(buff, "keyword=") != NULL) && players[0].playing == 1 && players[1].playing == 1)
+        {
+        	char * keyword = strstr(buff, "keyword=") + 8;
+        	int j = 1;
+
+        	for (int i = 0; i < 2; ++i)
+        	{
+            int other = j - i;
+        		if (players[i].finished == 1)
+        		{
+              players[other].finished = 1;
+              players[other].playing = 0;
+              //reset all stats here
+              send_page(sockfd, n, buff, END);
+        		}
+        		if (players[i].sockfd == sockfd)
+        		{
+        			players[i].guesses[players[i].num_guesses] = strdup(keyword);
+        			players[i].num_guesses++;
+              for (int i = 0; i < players[other].num_guesses; ++i)
+              {
+                if (strcmp(players[j].guesses[i], keyword) == 0)
+                {
+                  players[i].finished = 1;
+                  players[i].playing = 0;
+                  //reset all stats here
+                  send_page(sockfd, n, buff, END);
+                }
+              }
+        		}
+        	}
+        	return send_page(sockfd, n, buff, ACCEPTED);
+        }
+        else if ((strstr(buff, "keyword=") != NULL))
+        {
+        	return send_page(sockfd, n, buff, DISCARDED);
+        }
         // int p1, p2;
         // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
         //     buff[p1] = buff[p2];
