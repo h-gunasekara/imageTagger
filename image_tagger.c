@@ -249,9 +249,10 @@ static bool handle_http_request(int sockfd, player_t* players)
         }
         else if (strstr(buff, "keyword=") != NULL) {
           int j;
+          int other;
           for (int self = 0; self < 2; ++self){
             other = 1 - self;
-            } if ((players[self].finished == 0 || players[other].nextgame == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
+            if ((players[self].finished == 0 || players[other].nextgame == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
 
                 players[self].finished = 1;
                 for (int remove = 0; remove <= players[self].num_guesses; ++remove)
@@ -259,10 +260,12 @@ static bool handle_http_request(int sockfd, player_t* players)
                   free(players[self]].guesses[remove]);
                 }
                 return send_page(sockfd, n, buff, END);
+                
             } else {
               return send_page(sockfd, n, buff, DISCARDED);
             }
           }
+        }
 
 
         // int p1, p2;
