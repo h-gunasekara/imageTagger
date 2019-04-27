@@ -187,36 +187,39 @@ static bool handle_http_request(int sockfd, player_t* players)
         		}
         		if (players[i].sockfd == sockfd)
         		{
-              printf("If this prints a keyword has been entered.\n");
-        			players[i].guesses[players[i].num_guesses] = strdup(keyword);
-              printf("keyword that has been inputted:   '%s'\n", players[i].guesses[players[i].num_guesses]);
-              printf("the number of guesses made by you is:   '%d'\n", players[i].num_guesses);
-              printf("Guesses made by you:\n");
-              for (int guess = 0; guess < players[i].num_guesses; ++guess)
-              {
-                printf("%s\n", players[i].guesses[guess]);
-              }
+            players[i].guesses[players[i].num_guesses] = strdup(keyword);
+            printf("If this prints a keyword has been entered.\n");
+            printf("keyword that has been inputted:   '%s'\n", players[i].guesses[players[i].num_guesses]);
+            players[i].num_guesses++;
+            other = j - i;
+            }
+          }
+          printf("the number of guesses made by you is:   '%d'\n", players[i].num_guesses);
+          printf("Guesses made by you:\n");
 
-              printf("\n\nGuesses made by the other player:\n");
-              printf("the number of guesses made by the other player is:   '%d'\n", players[other].num_guesses);
-        			players[i].num_guesses++;
-              other = j - i;
-              for (int guess = 0; guess < players[other].num_guesses; ++guess)
-              {
-                printf("%s\n", players[other].guesses[guess]);
-                if (strcmp(players[other].guesses[guess], keyword) == 0)
-                {
-                  printf("If this prints the keyword is in the other players list and the player is finished.\n");
-                  players[i].finished = 1;
-    //              players[i].playing = 0;
-                  //reset all stats here
-                  return send_page(sockfd, n, buff, END);
-                }
-              }
-              printf("If this prints then the key word has been accepted.\n");
-              return send_page(sockfd, n, buff, ACCEPTED);
+          int i = 0;
+          int other = 1;
+          for (int guess = 0; guess < players[i].num_guesses; ++guess)
+          {
+            printf("%s\n", players[i].guesses[guess]);
+          }
+
+          printf("\n\nGuesses made by the other player:\n");
+          printf("the number of guesses made by the other player is:   '%d'\n", players[other].num_guesses);
+          for (int guess = 0; guess < players[other].num_guesses; ++guess)
+          {
+            printf("%s\n", players[other].guesses[guess]);
+            if (strcmp(players[other].guesses[guess], keyword) == 0)
+            {
+              printf("If this prints the keyword is in the other players list and the player is finished.\n");
+              players[i].finished = 1;
+//              players[i].playing = 0;
+              //reset all stats here
+              return send_page(sockfd, n, buff, END);
             }
-            }
+          }
+          printf("If this prints then the key word has been accepted.\n");
+          return send_page(sockfd, n, buff, ACCEPTED);
         }
         else if ((strstr(buff, "keyword=") != NULL))
         {
