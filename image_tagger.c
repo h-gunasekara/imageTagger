@@ -172,6 +172,7 @@ static bool handle_http_request(int sockfd, player_t* players)
         {
         	char * keyword = strstr(buff, "keyword=") + 8;
         	int j = 1;
+          int other;
 
         	for (int i = 0; i < 2; ++i)
         	{
@@ -180,27 +181,28 @@ static bool handle_http_request(int sockfd, player_t* players)
     //          players[other].finished = 1;
     //          players[other].playing = 0;
               //reset all stats here
-              send_page(players[other].sockfd, n, buff, END);
+              return send_page(players[other].sockfd, n, buff, END);
         		}
         		if (players[i].sockfd == sockfd)
         		{
         			players[i].guesses[players[i].num_guesses] = strdup(keyword);
         			players[i].num_guesses++;
-              int other = j - i;
+              other = j - i;
+              for (int guess = 0; guess < players[other].num_guesses; ++guess)
+              {
+                if (strcmp(players[other].guesses[guess], keyword) == 0)
+                {
+                  players[i].finished = 1;
+                  players[i].playing = 0;
+                  //reset all stats here
+                  return send_page(sockfd, n, buff, END);
+                }
+              }
+              return send_page(sockfd, n, buff, ACCEPTED);
+            }
             }
           }
-          for (int guess = 0; guess < players[other].num_guesses; ++guess)
-          {
-            if (strcmp(players[other].guesses[guess], keyword) == 0)
-            {
-              players[i].finished = 1;
-              players[i].playing = 0;
-              //reset all stats here
-              send_page(sockfd, n, buff, END);
-            }
-          }
-        	return send_page(sockfd, n, buff, ACCEPTED);
-        }
+
         else if ((strstr(buff, "keyword=") != NULL))
         {
         	return send_page(sockfd, n, buff, DISCARDED);
