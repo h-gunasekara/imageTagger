@@ -208,7 +208,10 @@ static bool handle_http_request(int sockfd, player_t* players)
                 {
                   players[i].finished = 1;
                   players[i].playing = 0;
-
+                  for (int remove = 0; remove <= players[i].num_guesses; ++remove)
+                  {
+                    free(players[i].guesses[remove]);
+                  }
                   //reset all stats here
                   return send_page(sockfd, n, buff, END);
                 }
@@ -244,6 +247,10 @@ static bool handle_http_request(int sockfd, player_t* players)
         		{
               players[i].finished = 1;
               players[i].playing = 0;
+              for (int remove = 0; remove <= players[i].num_guesses; ++remove)
+              {
+                free(players[i].guesses[remove]);
+              }
         			return send_page(sockfd, n, buff, END);
         		}
             else if (players[other].playing == 0)
