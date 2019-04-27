@@ -252,8 +252,7 @@ static bool handle_http_request(int sockfd, player_t* players)
           int other;
           for (int self = 0; self < 2; ++self){
             other = 1 - self;
-            if ((players[self].finished == 0 || players[self].nextgame == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
-
+            if ((players[self].finished == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
                 players[self].finished = 1;
                 for (int remove = 0; remove <= players[self].num_guesses; ++remove)
                 {
