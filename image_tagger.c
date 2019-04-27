@@ -210,6 +210,7 @@ static bool handle_http_request(int sockfd, player_t* players)
                 {
                   players[i].finished = 1;
                   players[i].playing = 0;
+                  players[other].playing = 0;
                   for (int remove = 0; remove <= players[i].num_guesses; ++remove)
                   {
                     free(players[i].guesses[remove]);
@@ -259,8 +260,8 @@ static bool handle_http_request(int sockfd, player_t* players)
             other = 1- i;
             if (players[i].finished == 0 && players[other].finished == 1)
             {
-              players[i].finished = 1;
-              players[i].playing = 0;
+              players[i].finished = 1;  
+
               for (int remove = 0; remove <= players[i].num_guesses; ++remove)
               {
                 free(players[i].guesses[remove]);
