@@ -198,7 +198,6 @@ static bool handle_http_request(int sockfd, player_t* players)
           }
 
 
-          int other;
           for (int i = 0; i < 2; ++i)
         	{
             other = 1 - i;
@@ -250,7 +249,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             {
               return send_page(sockfd, n, buff, DISCARDED);
             }
-
+          }
         }
         // int p1, p2;
         // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
