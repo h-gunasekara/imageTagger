@@ -171,6 +171,8 @@ static bool handle_http_request(int sockfd, player_t* players)
         else if ((strstr(buff, "keyword=") != NULL) && players[0].playing == 1 && players[1].playing == 1)
         {
         	char * keyword = strstr(buff, "keyword=") + 8;
+          int keyword_length = strlen(keyword) - 12;
+
         	int j = 1;
           int other;
 
@@ -187,11 +189,11 @@ static bool handle_http_request(int sockfd, player_t* players)
         		}
         		if (players[i].sockfd == sockfd)
         		{
-            players[i].guesses[players[i].num_guesses] = strdup(keyword);
-            printf("If this prints a keyword has been entered.\n");
-            printf("keyword that has been inputted:   '%s'\n", players[i].guesses[players[i].num_guesses]);
-            players[i].num_guesses++;
-            other = j - i;
+              players[i].guesses[players[i].num_guesses] = strndup(keyword, keyword_length);
+              printf("If this prints a keyword has been entered.\n");
+              printf("keyword that has been inputted:   '%s'\n", players[i].guesses[players[i].num_guesses]);
+              players[i].num_guesses++;
+              other = j - i;
             }
           }
 
@@ -206,8 +208,8 @@ static bool handle_http_request(int sockfd, player_t* players)
               printf("%s\n", players[i].guesses[guess]);
             }
 
-            printf("Your sockfd is:   '%d'\n", players[other].sockfd);
-            printf("\n\nGuesses made by the other player:\n");
+            printf("\n\nOther player sockfd is:   '%d'\n", players[other].sockfd);
+            printf("Guesses made by the other player:\n");
             printf("the number of guesses made by the other player is:   '%d'\n", players[other].num_guesses);
             for (int guess = 0; guess < players[other].num_guesses; ++guess)
             {
@@ -229,7 +231,9 @@ static bool handle_http_request(int sockfd, player_t* players)
               printf("%s\n", players[other].guesses[guess]);
             }
 
-            printf("\n\nGuesses made by the other player:\n");
+
+            printf("\n\nOther player sockfd is:   '%d'\n", players[i].sockfd);
+            printf("Guesses made by the other player:\n");
             printf("the number of guesses made by the other player is:   '%d'\n", players[i].num_guesses);
             for (int guess = 0; guess < players[i].num_guesses; ++guess)
             {
