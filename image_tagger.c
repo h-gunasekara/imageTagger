@@ -49,6 +49,7 @@ typedef struct
   int num_guesses;
   int playing;
   int finished;
+  int nextgame;
 } player_t;
 
 
@@ -118,7 +119,11 @@ static bool handle_http_request(int sockfd, player_t* players)
           for (int i = 0; i < 2; ++i){
             if (players[i].sockfd == sockfd){
               players[i].playing = 1;
-              players[i].finished = 0;
+              if (players[i].finished == 1){
+                  players[i].finished = 0;
+                  players[i].nextgame = 1;
+              }
+
               printf("YOU HAVE JUST STARTED PLAYING THE GAME\n");
             }
           }
@@ -143,6 +148,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             players[0].playing = 0;
             players[0].num_guesses = 0;
             players[0].finished = 0;
+            players[0].nextgame = 0;
           }
           else
           {
@@ -152,6 +158,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             players[1].playing = 0;
             players[1].num_guesses = 0;
             players[1].finished = 0;
+            players[0].nextgame = 0;
           }
           return send_page(sockfd, n, buff, START);
         }
@@ -240,48 +247,22 @@ static bool handle_http_request(int sockfd, player_t* players)
           printf("If this prints then the key word has been accepted.\n");
           return send_page(sockfd, n, buff, ACCEPTED);
         }
-        else if ((strstr(buff, "keyword=") != NULL) && ((players[0].playing == 0 && players[1].playing == 1) || (players[0].playing == 1 && players[1].playing == 0)))
-        {
-          int other;
-          for (int i = 0; i < 2; ++i)
-          {
-            other = 1 - i;
-            if (players[other].playing == 0)
-            {
-              return send_page(sockfd, n, buff, DISCARDED);
-            }
-          }
-        }
-        else if ((strstr(buff, "keyword=") != NULL) && ((players[0].finished == 0 && players[1].finished == 1) || (players[0].finished == 1 && players[1].finished == 0)))
-        {
-          int other;
-          for (int i = 0; i < 2; ++i)
-        	{
-            other = 1- i;
-            if (players[i].finished == 0 && players[other].finished == 1)
-            {
-              players[i].finished = 1;
+        else if (strstr(buff, "keyword=") != NULL) {
+          int j;
+          for (int self = 0; self < 2; ++self){
+            other = 1 - self;
+            } if ((players[self].finished == 0 || players[other].nextgame == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
 
-              for (int remove = 0; remove <= players[i].num_guesses; ++remove)
-              {
-                free(players[i].guesses[remove]);
-              }
-              return send_page(sockfd, n, buff, END);
-            }
-        }
-        }
-        else if ((strstr(buff, "keyword=") != NULL) && (players[0].playing == 0 || players[1].playing == 0))
-        {
-          int other;
-          for (int i = 0; i < 2; ++i)
-          {
-            other = 1 - i;
-            if (players[other].playing == 0)
-            {
+                players[self].finished = 1;
+                for (int remove = 0; remove <= players[self].num_guesses; ++remove)
+                {
+                  free(players[self]].guesses[remove]);
+                }
+                return send_page(sockfd, n, buff, END);
+            } else {
               return send_page(sockfd, n, buff, DISCARDED);
             }
           }
-        }
 
 
         // int p1, p2;
