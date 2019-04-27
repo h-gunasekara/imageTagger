@@ -257,10 +257,10 @@ static bool handle_http_request(int sockfd, player_t* players)
                 players[self].finished = 1;
                 for (int remove = 0; remove <= players[self].num_guesses; ++remove)
                 {
-                  free(players[self]].guesses[remove]);
+                  free(players[self].guesses[remove]);
                 }
                 return send_page(sockfd, n, buff, END);
-                
+
             } else {
               return send_page(sockfd, n, buff, DISCARDED);
             }
