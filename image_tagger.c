@@ -110,7 +110,7 @@ static bool handle_http_request(int sockfd, player_t* players)
     {
       // get the size of the file
       if (*curr == ' '){
-
+        return send_page(sockfd, n, buff, INTRO);
       }
       struct stat st;
       stat("lab6-GET.html", &st);
