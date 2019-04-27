@@ -117,7 +117,7 @@ static bool handle_http_request(int sockfd, player_t* players)
         {
           for (int i = 0; i < 2; ++i){
             if (players[i].sockfd == sockfd){
-              players[i].ingame = 1;
+              players[i].playing = 1;
             }
           }
           return send_page(sockfd, n, buff, TURN);
@@ -128,34 +128,32 @@ static bool handle_http_request(int sockfd, player_t* players)
     {
         // locate the username, it is safe to do so in this sample code, but usually the result is expected to be
         // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
-        char * username = strstr(buff, "user=") + 5;
-        int username_length = strlen(username);
-        // the length needs to include the ", " before the username
-        long added_length = username_length + 2;
+        if(strstr(buff, "user=") != NULL)
+        {
+          char * username = strstr(buff, "user=") + 5;
+          int username_length = strlen(username);
+          // the length needs to include the ", " before the username
+          if (players[0].name == NULL)
+          {
+            players[0].sockfd = sockfd;
+            players[0].name = strdup(username);
+            players[0].name_len = username_length;
+            players[0].playing = 0;
+            players[0].num.guesses = 0;
+            players[0].finished = 0;
+          }
+          else
+          {
+            players[1].sockfd = sockfd;
+            players[1].name = strdup(username);
+            players[1].name_len = username_length;
+            players[1].playing = 0;
+            players[1].num_guesses = 0;
+            players[1].finished = 0;
+          }
+          return send_page(sockfd, n, buff, START);
+        }
 
-        // get the size of the file
-        struct stat st;
-        stat("lab6-POST.html", &st);
-        // increase file size to accommodate the username
-        long size = st.st_size + added_length;
-        n = sprintf(buff, HTTP_200_FORMAT, size);
-        // send the header first
-        if (write(sockfd, buff, n) < 0)
-        {
-            perror("write");
-            return false;
-        }
-        // read the content of the HTML file
-        int filefd = open("lab6-POST.html", O_RDONLY);
-        n = read(filefd, buff, 2048);
-        if (n < 0)
-        {
-            perror("read");
-            close(filefd);
-            return false;
-        }
-        close(filefd);
-        // move the trailing part backward
         int p1, p2;
         for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
             buff[p1] = buff[p2];
