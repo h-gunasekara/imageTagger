@@ -208,6 +208,7 @@ static bool handle_http_request(int sockfd, player_t* players)
                 {
                   players[i].finished = 1;
                   players[i].playing = 0;
+
                   //reset all stats here
                   return send_page(sockfd, n, buff, END);
                 }
