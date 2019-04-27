@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=gnu99 -Wall -Wextra
+CFLAGS = -Wall -Wextra -std=gnu99 -I.
 OBJ = image_tagger.o
 EXE = image_tagger
 
