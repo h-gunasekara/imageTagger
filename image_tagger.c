@@ -175,11 +175,10 @@ static bool handle_http_request(int sockfd, player_t* players)
 
         	for (int i = 0; i < 2; ++i)
         	{
-            int other = j - i;
         		if (players[i].finished == 1)
         		{
-              players[other].finished = 1;
-              players[other].playing = 0;
+    //          players[other].finished = 1;
+    //          players[other].playing = 0;
               //reset all stats here
               send_page(players[other].sockfd, n, buff, END);
         		}
@@ -187,18 +186,19 @@ static bool handle_http_request(int sockfd, player_t* players)
         		{
         			players[i].guesses[players[i].num_guesses] = strdup(keyword);
         			players[i].num_guesses++;
-              for (int guess = 0; guess < players[other].num_guesses; ++guess)
-              {
-                if (strcmp(players[other].guesses[guess], keyword) == 0)
-                {
-                  players[i].finished = 1;
-                  players[i].playing = 0;
-                  //reset all stats here
-                  send_page(sockfd, n, buff, END);
-                }
-              }
-        		}
-        	}
+              int other = j - i;
+            }
+          }
+          for (int guess = 0; guess < players[other].num_guesses; ++guess)
+          {
+            if (strcmp(players[other].guesses[guess], keyword) == 0)
+            {
+              players[i].finished = 1;
+              players[i].playing = 0;
+              //reset all stats here
+              send_page(sockfd, n, buff, END);
+            }
+          }
         	return send_page(sockfd, n, buff, ACCEPTED);
         }
         else if ((strstr(buff, "keyword=") != NULL))
