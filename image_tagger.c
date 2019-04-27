@@ -118,6 +118,8 @@ static bool handle_http_request(int sockfd, player_t* players)
           for (int i = 0; i < 2; ++i){
             if (players[i].sockfd == sockfd){
               players[i].playing = 1;
+              playing[i].finished = 0;
+              printf("YOU HAVE JUST STARTED PLAYING THE GAME\n");
             }
           }
           return send_page(sockfd, n, buff, TURN);
@@ -237,28 +239,38 @@ static bool handle_http_request(int sockfd, player_t* players)
           printf("If this prints then the key word has been accepted.\n");
           return send_page(sockfd, n, buff, ACCEPTED);
         }
-        else if ((strstr(buff, "keyword=") != NULL))
+        else if ((strstr(buff, "keyword=") != NULL) && (players[0].playing == 0 || players[1].playing == 0))
         {
           int other;
           for (int i = 0; i < 2; ++i)
         	{
             other = 1 - i;
-        		if (players[other].finished == 1)
-        		{
+            if (players[other].playing == 0)
+            {
+              return send_page(sockfd, n, buff, DISCARDED);
+            }
+          }
+        }
+        else if ((strstr(buff, "keyword=") != NULL) && (players[0].finished == 1 || players[1].finished == 1))
+        {
+          int other;
+          for (int i = 0; i < 2; ++i)
+        	{
+            other = 1- i;
+            if (players[i].finished == 0 && players[other].finished == 1)
+            {
               players[i].finished = 1;
               players[i].playing = 0;
               for (int remove = 0; remove <= players[i].num_guesses; ++remove)
               {
                 free(players[i].guesses[remove]);
               }
-        			return send_page(sockfd, n, buff, END);
-        		}
-            else if (players[other].playing == 0)
-            {
-              return send_page(sockfd, n, buff, DISCARDED);
+              return send_page(sockfd, n, buff, END);
             }
-          }
         }
+        }
+
+
         // int p1, p2;
         // for (p1 = size - 1, p2 = p1 - added_length; p1 >= size - 25; --p1, --p2)
         //     buff[p1] = buff[p2];
