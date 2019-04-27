@@ -183,16 +183,19 @@ static bool handle_http_request(int sockfd, player_t* players)
     //          players[other].playing = 0;
               printf("If this prints we are finished.\n");
               //reset all stats here
-              return send_page(sockfd, n, buff, END);
+    //          return send_page(sockfd, n, buff, END);
         		}
         		if (players[i].sockfd == sockfd)
         		{
               printf("If this prints a keyword has been entered.\n");
         			players[i].guesses[players[i].num_guesses] = strdup(keyword);
+              printf("keyword that has been inputted:   '%s'\n", players[i].guesses[players[i].num_guesses]);
+              printf("Guesses made by the other player:\n");
         			players[i].num_guesses++;
               other = j - i;
               for (int guess = 0; guess < players[other].num_guesses; ++guess)
               {
+                printf("%s\n", players[other].guesses[guess]);
                 if (strcmp(players[other].guesses[guess], keyword) == 0)
                 {
                   printf("If this prints the keyword is in the other players list and the player is finished.\n");
