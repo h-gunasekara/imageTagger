@@ -161,7 +161,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             if (players[i].sockfd == sockfd)
             {
               players[i].playing = 0;
-              players[i].finshed = 1;
+              players[i].finished = 1;
               printf("%s logged out on %d\n", players[i].name, sockfd);
             }
           }
