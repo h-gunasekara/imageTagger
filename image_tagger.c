@@ -1,4 +1,4 @@
-selfself/*
+/*
 ** http-server.c
 */
 
