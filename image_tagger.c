@@ -387,6 +387,13 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
 
   }
 
+  if (strcmp(page, START) == 0)
+  {
+      char temp[MAXKEYLENGTH];
+      sprintf(str, "Set-Cookie: username=%s\r\n", players[curr_play_num].name);
+      size = st.st_size + players[curr_play_num].name_len  - 1;
+  }
+
 
   n = sprintf(buff, HTTP_200_FORMAT, size);
   // send the header first
@@ -421,7 +428,8 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
     {
       if (players[i].sockfd == sockfd)
       {
-        sprintf(buff, buff, players[i].name);
+        n = sprintf(buff, buff, players[i].name);
+        temp[n] = 0;
       }
     }
   }
