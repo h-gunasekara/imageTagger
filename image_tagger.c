@@ -197,8 +197,10 @@ static bool handle_http_request(int sockfd, player_t* players)
 
               char * keyword = strstr(buff, "keyword=") + 8;
               int keyword_length = strlen(keyword) - 12;
+              if (players[self].sockfd == sockfd){
               players[self].guesses[players[self].num_guesses] = strndup(keyword, keyword_length);
               players[self].num_guesses++;
+              }
               for (int guess = 0; guess < players[other].num_guesses; ++guess)
               {
                 // if guessed correctly
@@ -211,7 +213,6 @@ static bool handle_http_request(int sockfd, player_t* players)
                   // reset all stats
                   players[self].finished = 1;
                   players[self].playing = 0;
-                  players[self].nextgame += 1;
 
                   // move to new image
                   if (img < 4)
@@ -233,8 +234,8 @@ static bool handle_http_request(int sockfd, player_t* players)
                   //reset all stats here
                   return send_page(sockfd, n, buff, END);
                 }
-              }
 
+              }
               return send_page(sockfd, n, buff, ACCEPTED);
             }
             // if the other player should be going to end game
