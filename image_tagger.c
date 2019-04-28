@@ -379,7 +379,13 @@ static bool send_page(int sockfd, int n, char* buff, char* page) {
   struct stat st;
   stat(page, &st);
   // increase file size to accommodate the username
-  n = sprintf(buff, HTTP_200_FORMAT, st.st_size);
+  long size = st.st_size;
+  if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
+  {
+    sprintf(buff, buff, img);
+    size += sizeof(img);
+  }
+  n = sprintf(buff, HTTP_200_FORMAT, size);
   // send the header first
   if (write(sockfd, buff, n) < 0)
   {
@@ -397,12 +403,9 @@ static bool send_page(int sockfd, int n, char* buff, char* page) {
   }
   close(filefd);
 
-  if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
-  {
-    sprintf(buff, buff, img);
-  }
 
-  if (write(sockfd, buff, st.st_size) < 0)
+
+  if (write(sockfd, buff, size) < 0)
   {
       perror("write");
       return false;
