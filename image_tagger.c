@@ -382,7 +382,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page) {
   long size = st.st_size;
   if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
   {
-    size += sizeof(img);
+    size += sizeof(img) - 2;
   }
 
   n = sprintf(buff, HTTP_200_FORMAT, size);
@@ -405,8 +405,12 @@ static bool send_page(int sockfd, int n, char* buff, char* page) {
 
   if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
   {
-    sprintf(buff, buff, img);
-    size += sizeof(img);
+    char * ending = strstr(buff, "image-") + 6;
+    int end_length = strlen(ending);
+    int start_length = strlen(buff) - end_length;
+    memcpy(buff, buff, start_length);
+    memcpy(buff, img, sizeof(img));
+    memcpy(buff, ending, end_length);
   }
 
   if (write(sockfd, buff, size) < 0)
