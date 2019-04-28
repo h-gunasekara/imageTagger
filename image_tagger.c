@@ -406,6 +406,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
       {
         sprintf(buff, buff, players[i].username);
       }
+    }
   }
 
   // Show Keywords
@@ -421,10 +422,9 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
             sprintf(buff, buff, ", %s");
             sprintf(buff, buff, players[i].guesses[guess]);
           }
-
         }
-
       }
+    }
   }
 
 
