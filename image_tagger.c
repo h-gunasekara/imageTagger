@@ -60,7 +60,7 @@ typedef struct
   int num_guesses;
   int playing;
   int finished;
-  int nextgame;
+
 } player_t;
 
 // Starting image.
@@ -194,7 +194,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             int other;
             other = 1 - self;
             // if both players are playing and not finished
-            if(players[self].playing == 1 && players[other].playing == 1 && (players[self].nextgame == players[other].nextgame)) {
+            if(players[self].playing == 1 && players[other].playing == 1) {
 
               char * keyword = strstr(buff, "keyword=") + 8;
               int keyword_length = strlen(keyword) - 12;
@@ -206,13 +206,9 @@ static bool handle_http_request(int sockfd, player_t* players)
               {
                 // if guessed correctly
 
-                printf("other player word: %s     your keyword: %s      similarity: %d\n", players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1], strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]));
-
-
                 if (strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]) == 0)
                 {
                   // reset all stats
-                  players[self].finished = 1;
                   players[self].playing = 0;
 
                   // move to new image
@@ -227,16 +223,17 @@ static bool handle_http_request(int sockfd, player_t* players)
                   {
                     free(players[self].guesses[remove]);
                   }
+                  players[self].num_guesses = 0;
                   // remove the other players guess list
                   for (int remove = 0; remove <= players[other].num_guesses; ++remove)
                   {
                     free(players[other].guesses[remove]);
                   }
+                  players[other].num_guesses = 0;
                   //reset all stats here
                   return send_page(sockfd, n, buff, END, players);
                 }
               }
-
               return send_page(sockfd, n, buff, ACCEPTED, players);
             }
             // if the other player should be going to end game
@@ -368,10 +365,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   stat(page, &st);
   // increase file size to accommodate the username
   long size = st.st_size;
-  if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
-  {
-    size = st.st_size + sizeof(img);
-  }
+
 
   n = sprintf(buff, HTTP_200_FORMAT, size);
   // send the header first
