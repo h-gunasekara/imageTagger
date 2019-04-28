@@ -125,9 +125,7 @@ static bool handle_http_request(int sockfd, player_t* players)
           for (int i = 0; i < 2; ++i){
             if (players[i].sockfd == sockfd){
               // if they are playing again set nextgame to 1
-              if (players[i].finished == 1){
-                  players[i].nextgame = 1;
-              }
+              players[i].nextgame += 1;
               // set player to playing and not finished
               players[i].playing = 1;
               players[i].finished = 0;
@@ -184,15 +182,16 @@ static bool handle_http_request(int sockfd, player_t* players)
           return send_page(sockfd, n, buff, GAMEOVER);
         }
 
-        // if a keyword has been submitted and both players are playing and not finished
+        // if a keyword has been submitted
         else if (strstr(buff, "keyword=") != NULL) {
 
           int other;
+          // goes through each player
           for (int self = 0; self < 2; ++self){
             other = 1 - self;
-            if(players[self].playing == 1 && players[other].playing == 1 && players[self].finished == 0 && players[other].finished == 0) {
-              players[self].nextgame = 0;
-              players[other].nextgame = 0;
+            // if both players are playing and not finished
+            if(players[self].playing == 1 && players[other].playing == 1 && (players[self].nextgame == players[other].nextgame)) {
+
               char * keyword = strstr(buff, "keyword=") + 8;
               int keyword_length = strlen(keyword) - 12;
               if (players[self].sockfd == sockfd)
@@ -201,21 +200,27 @@ static bool handle_http_request(int sockfd, player_t* players)
                 players[self].num_guesses++;
                 for (int guess = 0; guess < players[other].num_guesses; ++guess)
                 {
+                  // if guessed correctly
                   if (strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]) == 0)
                   {
+                    // reset all stats
                     players[self].finished = 1;
                     players[self].playing = 0;
-                    players[other].playing = 0;
+                    players[self].nextgame += 1;
+
+                    // move to new image
                     if (img < 4)
                     {
                       img++;
                     } else if (img == 4){
                       img = 1;
                     }
+                    // remove the players current guess list
                     for (int remove = 0; remove <= players[self].num_guesses; ++remove)
                     {
                       free(players[self].guesses[remove]);
                     }
+                    // remove the other players guess list
                     for (int remove = 0; remove <= players[other].num_guesses; ++remove)
                     {
                       free(players[other].guesses[remove]);
@@ -227,8 +232,10 @@ static bool handle_http_request(int sockfd, player_t* players)
               }
               return send_page(sockfd, n, buff, ACCEPTED);
             }
-            else if ((players[self].finished == 0 && players[self].nextgame == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
+            // if the other player should be going to end game
+            else if (players[self].playing == 1 && ((players[self].nextgame != players[other].nextgame) || players[other].finished == 1))   {
                 players[self].finished = 1;
+                players[self].playing = 0;
                 return send_page(sockfd, n, buff, END);
             }
           }
