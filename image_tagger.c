@@ -371,7 +371,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page) {
   long size = st.st_size;
   if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
   {
-    size += sizeof(img) - 2;
+    size = st.st_size + sizeof(img);
   }
 
   n = sprintf(buff, HTTP_200_FORMAT, size);
@@ -400,14 +400,11 @@ static bool send_page(int sockfd, int n, char* buff, char* page) {
   }
 
   // Show Username
-  if (strcmp(page, START) == 0){
-
-  }
+  if (strcmp(page, START) == 0) {}
 
   // Show Keywords
-  if (strcmp(page, ACCEPTED) == 0){
+  if (strcmp(page, ACCEPTED) == 0) {}
 
-  }
 
 
 
