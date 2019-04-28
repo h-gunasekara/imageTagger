@@ -362,6 +362,30 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   stat(page, &st);
   // increase file size to accommodate the username
   long size = st.st_size;
+  int curr_play_num;
+  char temp[2048];
+
+  for (int i = 0; i < 2; ++i)
+  {
+      if (players[i].sockfd == sockfd)
+      {
+          curr_play_num = i;
+      }
+  }
+
+  if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
+  {
+      size = st.st_size - 2;
+      if (players[curr_play_num].num_guesses != 0)
+      {
+          size += 11;
+          for (int guess = 0; guess < players[curr_play_num].num_guesses; ++guess)
+          {
+              size += strlen(players[curr_play_num].guesses[guess]);
+          }
+      }
+
+  }
 
 
   n = sprintf(buff, HTTP_200_FORMAT, size);
