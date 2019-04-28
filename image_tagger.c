@@ -204,6 +204,12 @@ static bool handle_http_request(int sockfd, player_t* players)
                 for (int guess = 0; guess < players[other].num_guesses; ++guess)
                 {
                   // if guessed correctly
+
+                  printf("other player word: %s     your keyword: %s      similarity: %d\n", players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1], strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]));
+
+
+
+
                   if (strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]) == 0)
                   {
                     // reset all stats
