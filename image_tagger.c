@@ -126,7 +126,7 @@ static bool handle_http_request(int sockfd, player_t* players)
           else
           {
               method = POST;
-              has_cookie = 1;
+              cookie = 1;
           }
 
           // in the case where a player has pressed start
