@@ -143,7 +143,7 @@ static bool handle_http_request(int sockfd, player_t* players)
         }
 
     }
-    else if (method == POST)
+    if (method == POST)
     {
         // locate the username, it is safe to do so in this sample code, but usually the result is expected to be
         // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
@@ -168,7 +168,7 @@ static bool handle_http_request(int sockfd, player_t* players)
           if (players[0].name == NULL)
           {
             players[0].sockfd = sockfd;
-            players[0].name = strdup(username);
+            players[0].name = strdup(name);
             players[0].name_len = username_length;
             players[0].playing = 0;
             players[0].num_guesses = 0;
@@ -178,7 +178,7 @@ static bool handle_http_request(int sockfd, player_t* players)
           else
           {
             players[1].sockfd = sockfd;
-            players[1].name = strdup(username);
+            players[1].name = strdup(name);
             players[1].name_len = username_length;
             players[1].playing = 0;
             players[1].num_guesses = 0;
