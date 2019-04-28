@@ -404,7 +404,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
     {
       if (players[i].sockfd == sockfd)
       {
-        sprintf(buff, buff, players[i].username);
+        sprintf(buff, buff, players[i].name);
       }
     }
   }
