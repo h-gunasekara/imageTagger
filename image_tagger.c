@@ -74,6 +74,7 @@ static bool handle_http_request(int sockfd, player_t* players)
     // try to read the request
     char buff[2049];
     int n = read(sockfd, buff, 2049);
+    int cookie = 0;
     if (n <= 0)
     {
         if (n < 0)
@@ -118,7 +119,15 @@ static bool handle_http_request(int sockfd, player_t* players)
         // get the size of the file
         if (*curr == ' ')
         {
-          return send_page(sockfd, n, buff, INTRO, players);
+          if (strstr(buff, "Cookie") == NULL)
+          {
+              return send_page(sockfd, n, buff, INTRO, players);
+          }
+          else
+          {
+              method = POST;
+              has_cookie = 1;
+          }
 
           // in the case where a player has pressed start
         } else if (strstr(buff, "start=Start") != NULL)
@@ -138,10 +147,23 @@ static bool handle_http_request(int sockfd, player_t* players)
     {
         // locate the username, it is safe to do so in this sample code, but usually the result is expected to be
         // copied to another buffer using strcpy or strncpy to ensure that it will not be overwritten.
-        if(strstr(buff, "user=") != NULL)
+        if(strstr(buff, "user=") != NULL || cookie == 1)
         {
-          char * username = strstr(buff, "user=") + 5;
-          int username_length = strlen(username);
+          char *username;
+          int username_length;
+          char name[MAXKEYLENGTH];
+          if (strstr(buff, "user=") != NULL)
+          {
+              username = strstr(buff, "user=") + 5;
+              strcpy(name, username);
+              username_length = strlen(name);
+          }
+          else
+          {
+              username = strstr(buff, "username=") + 9;
+              strncpy(name, username, strlen(username) - 34);
+              username_length = strlen(username);
+          }
           // If there are no players then set player 1 stats
           if (players[0].name == NULL)
           {
