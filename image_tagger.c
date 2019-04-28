@@ -185,69 +185,52 @@ static bool handle_http_request(int sockfd, player_t* players)
         }
 
         // if a keyword has been submitted and both players are playing and not finished
-        else if ((strstr(buff, "keyword=") != NULL) && players[0].playing == 1 && players[1].playing == 1 && players[0].finished == 0 && players[1].finished == 0)
-        {
-        	char * keyword = strstr(buff, "keyword=") + 8;
-          int keyword_length = strlen(keyword) - 12;
-          int other;
-
-        	for (int self = 0; self < 2; ++self)
-        	{
-        		if (players[self].sockfd == sockfd)
-        		{
-              players[self].guesses[players[self].num_guesses] = strndup(keyword, keyword_length);
-              players[self].num_guesses++;
-            }
-          }
-
-
-          for (int self = 0; self < 2; ++self)
-        	{
-            other = 1 - self;
-            if (players[self].sockfd == sockfd){
-              for (int guess = 0; guess < players[other].num_guesses; ++guess)
-              {
-                if (strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]) == 0)
-                {
-                  players[self].finished = 1;
-                  players[self].nextgame = 0;
-                  players[self].playing = 0;
-                  players[other].playing = 0;
-                  players[other].nextgame = 0;
-                  if (img < 4)
-            			{
-            				img++;
-            			} else if (img == 4){
-                    img = 1;
-                  }
-                  for (int remove = 0; remove <= players[self].num_guesses; ++remove)
-                  {
-                    free(players[self].guesses[remove]);
-                  }
-                  for (int remove = 0; remove <= players[other].num_guesses; ++remove)
-                  {
-                    free(players[other].guesses[remove]);
-                  }
-                  //reset all stats here
-                  return send_page(sockfd, n, buff, END);
-                }
-              }
-            }
-          }
-
-          return send_page(sockfd, n, buff, ACCEPTED);
-        }
         else if (strstr(buff, "keyword=") != NULL) {
 
           int other;
           for (int self = 0; self < 2; ++self){
             other = 1 - self;
-            if ((players[self].finished == 0 && players[self].nextgame == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
+            if(players[self].playing == 1 && players[other].playing == 1 && players[self].finished == 0 && players[other].finished == 0) {
+              players[self].nextgame = 0;
+              players[other].nextgame = 0;
+              char * keyword = strstr(buff, "keyword=") + 8;
+              int keyword_length = strlen(keyword) - 12;
+              if (players[self].sockfd == sockfd)
+              {
+                players[self].guesses[players[self].num_guesses] = strndup(keyword, keyword_length);
+                players[self].num_guesses++;
+                for (int guess = 0; guess < players[other].num_guesses; ++guess)
+                {
+                  if (strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]) == 0)
+                  {
+                    players[self].finished = 1;
+                    players[self].playing = 0;
+                    players[other].playing = 0;
+                    if (img < 4)
+                    {
+                      img++;
+                    } else if (img == 4){
+                      img = 1;
+                    }
+                    for (int remove = 0; remove <= players[self].num_guesses; ++remove)
+                    {
+                      free(players[self].guesses[remove]);
+                    }
+                    for (int remove = 0; remove <= players[other].num_guesses; ++remove)
+                    {
+                      free(players[other].guesses[remove]);
+                    }
+                    //reset all stats here
+                    return send_page(sockfd, n, buff, END);
+                  }
+                }
+              }
+              return send_page(sockfd, n, buff, ACCEPTED);
+            }
+            else if ((players[self].finished == 0 && players[self].nextgame == 0) && (players[other].finished == 1 || players[other].nextgame == 1)) {
                 players[self].finished = 1;
                 return send_page(sockfd, n, buff, END);
-
             }
-
           }
           return send_page(sockfd, n, buff, DISCARDED);
         }
