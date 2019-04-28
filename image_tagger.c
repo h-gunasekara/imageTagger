@@ -443,17 +443,23 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   // Change Image
   if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
   {
-    char guesslist[MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS];
-    strcpy(guesslist, "keywords: ");
-    for (int i = 0; i < players[curr_play_num].num_guesses; ++i)
+    for (int i = 0; i < 2; ++i)
     {
-        strcat(guesslist, players[curr_play_num].guesses[i]);
-        strcat(guesslist, ",");
+      if (players[i].sockfd == sockfd)
+        {
+      char guesslist[MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS];
+      strcpy(guesslist, "keywords: ");
+      for (int i = 0; i < players[curr_play_num].num_guesses; ++i)
+      {
+          strcat(guesslist, players[curr_play_num].guesses[i]);
+          strcat(guesslist, ",");
+      }
+      printf("\n%s\n", buff);
+      n = sprintf(temp, buff, img);
+      temp[n] = 0;
     }
-    printf("\n%s\n", buff);
-    n = sprintf(temp, buff, img);
-    temp[n] = 0;
   }
+}
 
   // Show Username
   if (strcmp(page, START) == 0) {
