@@ -387,15 +387,18 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
 
   }
 
+  n = sprintf(buff, HTTP_200_FORMAT, "", size);
+
   if (strcmp(page, START) == 0)
   {
       char temp[MAXKEYLENGTH];
-      sprintf(str, "Set-Cookie: username=%s\r\n", players[curr_play_num].name);
+      sprintf(temp, "Set-Cookie: username=%s\r\n", players[curr_play_num].name);
       size = st.st_size + players[curr_play_num].name_len  - 1;
+      n = sprintf(buff, HTTP_200_FORMAT, temp, size);
   }
 
 
-  n = sprintf(buff, HTTP_200_FORMAT, size);
+
   // send the header first
   if (write(sockfd, buff, n) < 0)
   {
@@ -419,7 +422,13 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   {
     char guesslist[MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS];
     strcpy(guesslist, "keywords: ");
-    sprintf(buff, buff, img);
+    for (int i = 0; i < players[curr_play_num].num_guesses; ++i)
+    {
+        strcat(guesslist, players[curr_play_num].guesses[i]);
+        strcat(guesslist, ",");
+    }
+    n = sprintf(temp, buff, img, guesslist);
+    temp[n] = 0;
   }
 
   // Show Username
@@ -428,34 +437,18 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
     {
       if (players[i].sockfd == sockfd)
       {
-        n = sprintf(buff, buff, players[i].name);
+        n = sprintf(temp, buff, players[i].name);
         temp[n] = 0;
       }
     }
   }
-
-  // Show Keywords
-  if (strcmp(page, ACCEPTED) == 0) {
-    for (int i = 0; i < 2; ++i)
-    {
-      if (players[i].sockfd == sockfd)
-      {
-        for (int guess = 0; guess < players[i].num_guesses; ++guess){
-          if (guess != 0){
-            sprintf(buff, buff, players[i].guesses[guess]);
-          } else{
-            sprintf(buff, buff, ", %s");
-            sprintf(buff, buff, players[i].guesses[guess]);
-          }
-        }
-      }
-    }
+  else
+  {
+      strcpy(temp, buff);
   }
 
 
-
-
-  if (write(sockfd, buff, size) < 0)
+  if (write(sockfd, temp, size) < 0)
   {
       perror("write");
       return false;
