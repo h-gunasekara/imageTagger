@@ -125,7 +125,10 @@ static bool handle_http_request(int sockfd, player_t* players)
           for (int i = 0; i < 2; ++i){
             if (players[i].sockfd == sockfd){
               // if they are playing again set nextgame to 1
-              players[i].nextgame += 1;
+              if (players[i].finished == 1) {
+                players[i].nextgame += 1;
+              }
+
               // set player to playing and not finished
               players[i].playing = 1;
               players[i].finished = 0;
