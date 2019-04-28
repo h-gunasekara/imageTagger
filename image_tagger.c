@@ -66,7 +66,7 @@ typedef struct
 // Starting image.
 int img = 1;
 
-static bool send_page(int sockfd, int n, char* buff, char* page);
+static bool send_page(int sockfd, int n, char* buff, char* page, player_t* players);
 
 static bool handle_http_request(int sockfd, player_t* players)
 {
@@ -117,7 +117,7 @@ static bool handle_http_request(int sockfd, player_t* players)
         // get the size of the file
         if (*curr == ' ')
         {
-          return send_page(sockfd, n, buff, INTRO);
+          return send_page(sockfd, n, buff, INTRO, players);
 
           // in the case where a player has pressed start
         } else if (strstr(buff, "start=Start") != NULL)
@@ -135,7 +135,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             }
           }
           // send player to first turn
-          return send_page(sockfd, n, buff, TURN);
+          return send_page(sockfd, n, buff, TURN, players);
         }
 
     }
@@ -169,7 +169,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             players[1].finished = 0;
             players[0].nextgame = 0;
           }
-          return send_page(sockfd, n, buff, START);
+          return send_page(sockfd, n, buff, START, players);
         }
         // In the case of a quit, stop player playing and log off
         else if (strstr(buff, "quit=Quit") != NULL)
@@ -182,7 +182,7 @@ static bool handle_http_request(int sockfd, player_t* players)
               printf("%s logged out on %d\n", players[i].name, sockfd);
             }
           }
-          return send_page(sockfd, n, buff, GAMEOVER);
+          return send_page(sockfd, n, buff, GAMEOVER, players);
         }
 
         // if a keyword has been submitted
@@ -233,21 +233,21 @@ static bool handle_http_request(int sockfd, player_t* players)
                     free(players[other].guesses[remove]);
                   }
                   //reset all stats here
-                  return send_page(sockfd, n, buff, END);
+                  return send_page(sockfd, n, buff, END, players);
                 }
               }
 
-              return send_page(sockfd, n, buff, ACCEPTED);
+              return send_page(sockfd, n, buff, ACCEPTED, players);
             }
             // if the other player should be going to end game
             else if (players[self].playing == 1 && ((players[self].nextgame < players[other].nextgame) || players[other].playing == 0))   {
                 players[self].finished = 1;
                 players[self].playing = 0;
-                return send_page(sockfd, n, buff, END);
+                return send_page(sockfd, n, buff, END, players);
             }
           }
           }
-          return send_page(sockfd, n, buff, DISCARDED);
+          return send_page(sockfd, n, buff, DISCARDED, players);
 
         }
 
@@ -363,7 +363,7 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-static bool send_page(int sockfd, int n, char* buff, char* page) {
+static bool send_page(int sockfd, int n, char* buff, char* page, player_t* players) {
   struct stat st;
   stat(page, &st);
   // increase file size to accommodate the username
