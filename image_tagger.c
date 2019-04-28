@@ -156,7 +156,6 @@ static bool handle_http_request(int sockfd, player_t* players)
             players[0].playing = 0;
             players[0].num_guesses = 0;
             players[0].finished = 0;
-            players[0].nextgame = 0;
           }
           // If there is already one player then set player 2 stats
           else
@@ -167,7 +166,6 @@ static bool handle_http_request(int sockfd, player_t* players)
             players[1].playing = 0;
             players[1].num_guesses = 0;
             players[1].finished = 0;
-            players[0].nextgame = 0;
           }
           return send_page(sockfd, n, buff, START, players);
         }
@@ -198,8 +196,9 @@ static bool handle_http_request(int sockfd, player_t* players)
 
               char * keyword = strstr(buff, "keyword=") + 8;
               int keyword_length = strlen(keyword) - 12;
+              char *guess = malloc(keyword_length);
 
-              players[self].guesses[players[self].num_guesses] = strndup(keyword, keyword_length);
+              players[self].guesses[players[self].num_guesses] = guess;
               players[self].num_guesses++;
 
               for (int guess = 0; guess < players[other].num_guesses; ++guess)
@@ -210,6 +209,8 @@ static bool handle_http_request(int sockfd, player_t* players)
                 {
                   // reset all stats
                   players[self].playing = 0;
+                  players[self].finished = 1;
+                  players[other].finished = 1;
 
                   // move to new image
                   if (img < 4)
@@ -237,9 +238,11 @@ static bool handle_http_request(int sockfd, player_t* players)
               return send_page(sockfd, n, buff, ACCEPTED, players);
             }
             // if the other player should be going to end game
-            else if (players[self].playing == 1 && ((players[self].nextgame < players[other].nextgame) || players[other].playing == 0))   {
-                players[self].finished = 1;
+            else if (players[self].finshed == 1 || players[other].finshed == 1))   {
+                players[self].finished = 0;
                 players[self].playing = 0;
+                players[other].finished = 0;
+                players[other].playing = 0;
                 return send_page(sockfd, n, buff, END, players);
             }
           }
@@ -389,6 +392,8 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   // Change Image
   if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
   {
+    char guesslist[MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS];
+    strcpy(guesslist, "keywords: ");
     sprintf(buff, buff, img);
   }
 
