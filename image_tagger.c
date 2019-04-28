@@ -197,48 +197,44 @@ static bool handle_http_request(int sockfd, player_t* players)
 
               char * keyword = strstr(buff, "keyword=") + 8;
               int keyword_length = strlen(keyword) - 12;
-              if (players[self].sockfd == sockfd)
+              players[self].guesses[players[self].num_guesses] = strndup(keyword, keyword_length);
+              players[self].num_guesses++;
+              for (int guess = 0; guess < players[other].num_guesses; ++guess)
               {
-                players[self].guesses[players[self].num_guesses] = strndup(keyword, keyword_length);
-                players[self].num_guesses++;
-                for (int guess = 0; guess < players[other].num_guesses; ++guess)
+                // if guessed correctly
+
+                printf("other player word: %s     your keyword: %s      similarity: %d\n", players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1], strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]));
+
+
+                if (strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]) == 0)
                 {
-                  // if guessed correctly
+                  // reset all stats
+                  players[self].finished = 1;
+                  players[self].playing = 0;
+                  players[self].nextgame += 1;
 
-                  printf("other player word: %s     your keyword: %s      similarity: %d\n", players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1], strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]));
-
-
-
-
-                  if (strcmp(players[other].guesses[guess], players[self].guesses[players[self].num_guesses - 1]) == 0)
+                  // move to new image
+                  if (img < 4)
                   {
-                    // reset all stats
-                    players[self].finished = 1;
-                    players[self].playing = 0;
-                    players[self].nextgame += 1;
-
-                    // move to new image
-                    if (img < 4)
-                    {
-                      img++;
-                    } else if (img == 4){
-                      img = 1;
-                    }
-                    // remove the players current guess list
-                    for (int remove = 0; remove <= players[self].num_guesses; ++remove)
-                    {
-                      free(players[self].guesses[remove]);
-                    }
-                    // remove the other players guess list
-                    for (int remove = 0; remove <= players[other].num_guesses; ++remove)
-                    {
-                      free(players[other].guesses[remove]);
-                    }
-                    //reset all stats here
-                    return send_page(sockfd, n, buff, END);
+                    img++;
+                  } else if (img == 4){
+                    img = 1;
                   }
+                  // remove the players current guess list
+                  for (int remove = 0; remove <= players[self].num_guesses; ++remove)
+                  {
+                    free(players[self].guesses[remove]);
+                  }
+                  // remove the other players guess list
+                  for (int remove = 0; remove <= players[other].num_guesses; ++remove)
+                  {
+                    free(players[other].guesses[remove]);
+                  }
+                  //reset all stats here
+                  return send_page(sockfd, n, buff, END);
                 }
               }
+
               return send_page(sockfd, n, buff, ACCEPTED);
             }
             // if the other player should be going to end game
