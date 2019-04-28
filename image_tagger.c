@@ -29,6 +29,7 @@ static int const HTTP_400_LENGTH = 47;
 static char const * const HTTP_404 = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
 static int const HTTP_404_LENGTH = 45;
 
+
 #define MAXKEYWORDS 20
 #define MAXKEYLENGTH 20
 
@@ -60,6 +61,8 @@ typedef struct
 #define DISCARDED "5_discarded.html"
 #define END "6_endgame.html"
 #define GAMEOVER "7_gameover.html"
+
+int img = 1;
 
 static bool send_page(int sockfd, int n, char* buff, char* page);
 
@@ -207,6 +210,12 @@ static bool handle_http_request(int sockfd, player_t* players)
                   players[self].playing = 0;
                   players[other].playing = 0;
                   players[other].nextgame = 0;
+                  if (img < 4)
+            			{
+            				img++;
+            			} else if (img == 4){
+                    img = 1;
+                  }
                   for (int remove = 0; remove <= players[self].num_guesses; ++remove)
                   {
                     free(players[self].guesses[remove]);
@@ -387,6 +396,11 @@ static bool send_page(int sockfd, int n, char* buff, char* page) {
       return false;
   }
   close(filefd);
+
+  if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
+  {
+    sprintf(buff, buff, img);
+  }
 
   if (write(sockfd, buff, st.st_size) < 0)
   {
