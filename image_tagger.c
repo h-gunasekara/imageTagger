@@ -450,6 +450,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
         strcat(guesslist, players[curr_play_num].guesses[i]);
         strcat(guesslist, ",");
     }
+    printf(\n"%s\n", buff);
     n = sprintf(temp, buff, img, guesslist);
     temp[n] = 0;
   }
