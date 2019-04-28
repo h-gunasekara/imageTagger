@@ -399,10 +399,33 @@ static bool send_page(int sockfd, int n, char* buff, char* page) {
   }
 
   // Show Username
-  if (strcmp(page, START) == 0) {}
+  if (strcmp(page, START) == 0) {
+    for (int i = 0; i < 2; ++i)
+    {
+      if (players[i].sockfd == sockfd)
+      {
+        sprintf(buff, buff, players[i].username);
+      }
+  }
 
   // Show Keywords
-  if (strcmp(page, ACCEPTED) == 0) {}
+  if (strcmp(page, ACCEPTED) == 0) {
+    for (int i = 0; i < 2; ++i)
+    {
+      if (players[i].sockfd == sockfd)
+      {
+        for (int guess = 0; guess < players[i].num_guesses; ++guess){
+          if (guess != 0){
+            sprintf(buff, buff, players[i].guesses[guess]);
+          } else{
+            sprintf(buff, buff, ", %s");
+            sprintf(buff, buff, players[i].guesses[guess]);
+          }
+
+        }
+
+      }
+  }
 
 
 
