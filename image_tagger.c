@@ -188,19 +188,20 @@ static bool handle_http_request(int sockfd, player_t* players)
         // if a keyword has been submitted
         else if (strstr(buff, "keyword=") != NULL) {
 
-          int other;
           // goes through each player
           for (int self = 0; self < 2; ++self){
+            if (players[self].sockfd == sockfd){
+            int other;
             other = 1 - self;
             // if both players are playing and not finished
             if(players[self].playing == 1 && players[other].playing == 1 && (players[self].nextgame == players[other].nextgame)) {
 
               char * keyword = strstr(buff, "keyword=") + 8;
               int keyword_length = strlen(keyword) - 12;
-              if (players[self].sockfd == sockfd){
+
               players[self].guesses[players[self].num_guesses] = strndup(keyword, keyword_length);
               players[self].num_guesses++;
-              }
+
               for (int guess = 0; guess < players[other].num_guesses; ++guess)
               {
                 // if guessed correctly
@@ -234,8 +235,8 @@ static bool handle_http_request(int sockfd, player_t* players)
                   //reset all stats here
                   return send_page(sockfd, n, buff, END);
                 }
-
               }
+
               return send_page(sockfd, n, buff, ACCEPTED);
             }
             // if the other player should be going to end game
@@ -245,7 +246,9 @@ static bool handle_http_request(int sockfd, player_t* players)
                 return send_page(sockfd, n, buff, END);
             }
           }
+          }
           return send_page(sockfd, n, buff, DISCARDED);
+
         }
 
       }
