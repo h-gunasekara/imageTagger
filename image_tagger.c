@@ -213,9 +213,10 @@ static bool handle_http_request(int sockfd, player_t* players)
 
               char * keyword = strstr(buff, "keyword=") + 8;
               int keyword_length = strlen(keyword) - 12;
-              char *guess = malloc(keyword_length);
+              char *guesss = malloc(keyword_length);
+              strncpy(guesss, keyword, keyword_length);
 
-              players[self].guesses[players[self].num_guesses] = guess;
+              players[self].guesses[players[self].num_guesses] = guesss;
               players[self].num_guesses++;
 
               for (int guess = 0; guess < players[other].num_guesses; ++guess)
@@ -441,13 +442,14 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   close(filefd);
 
   // Change Image
-  if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
+  if (strcmp(page, ACCEPTED) == 0)
   {
     //MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS
     char guesslist[1000000];
     strcpy(guesslist, "Keywords: ");
     for (int i = 0; i < players[curr_play_num].num_guesses; ++i)
     {
+      printf("geuss: %s\n", guesslist);
         strcat(guesslist, players[curr_play_num].guesses[i]);
         strcat(guesslist, ",");
     }
