@@ -263,8 +263,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             else if (players[other].finished == 1)   {
                 players[self].finished = 0;
                 players[self].playing = 0;
-                players[other].finished = 0;
-                players[other].playing = 0;
+
                 return send_page(sockfd, n, buff, END, players);
             }
           }
