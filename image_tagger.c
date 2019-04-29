@@ -136,6 +136,7 @@ static bool handle_http_request(int sockfd, player_t* players)
             if (players[i].sockfd == sockfd){
               // set player to playing
               players[i].playing = 1;
+              players[i].finished = 0;
             }
           }
           // send player to first turn
