@@ -194,6 +194,10 @@ static bool handle_http_request(int sockfd, player_t* players)
             if (players[i].sockfd == sockfd)
             {
               players[i].playing = 0;
+              for (int remove = 0; remove <= players[self].num_guesses; ++remove)
+              {
+              free(players[i].guesses[remove]);
+              }
               printf("%s logged out on %d\n", players[i].name, sockfd);
             }
           }
@@ -240,13 +244,13 @@ static bool handle_http_request(int sockfd, player_t* players)
                   // remove the players current guess list
                   for (int remove = 0; remove <= players[self].num_guesses; ++remove)
                   {
-                    free(players[self].guesses[remove]);
+                    players[self].guesses[remove] = (char *) realloc(players[self].guesses[remove], MAXKEYLENGTH);
                   }
                   players[self].num_guesses = 0;
                   // remove the other players guess list
                   for (int remove = 0; remove <= players[other].num_guesses; ++remove)
                   {
-                    free(players[other].guesses[remove]);
+                    players[other].guesses[remove] = (char *) realloc(players[other].guesses[remove], MAXKEYLENGTH);
                   }
                   players[other].num_guesses = 0;
                   //reset all stats here
@@ -449,9 +453,12 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
     strcpy(guesslist, "Keywords: ");
     for (int i = 0; i < players[curr_play_num].num_guesses; ++i)
     {
-      printf("geuss: %s\n", guesslist);
+      if (i == 0){
         strcat(guesslist, players[curr_play_num].guesses[i]);
+      } else {
         strcat(guesslist, ",");
+        strcat(guesslist, players[curr_play_num].guesses[i]);
+      }
     }
     printf(buff, img, guesslist);
     n = sprintf(str, buff, img, guesslist);
