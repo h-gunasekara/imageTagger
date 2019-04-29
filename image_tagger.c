@@ -386,7 +386,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   // increase file size to accommodate the username
   long size = st.st_size;
   int curr_play_num;
-  char temp[2048];
+  char str[2048];
 
   for (int i = 0; i < 2; ++i)
   {
@@ -414,10 +414,10 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
 
   if (strcmp(page, START) == 0)
   {
-      char temp[strlen("Set-Cookie: username=%s\r\n") + MAXKEYLENGTH];
-      sprintf(temp, "Set-Cookie: username=%s\r\n", players[curr_play_num].name);
+      char str[strlen("Set-Cookie: username=%s\r\n") + MAXKEYLENGTH];
+      sprintf(str, "Set-Cookie: username=%s\r\n", players[curr_play_num].name);
       size = st.st_size + players[curr_play_num].name_len  - 1;
-      n = sprintf(buff, HTTP_200_FORMAT, temp, size);
+      n = sprintf(buff, HTTP_200_FORMAT, str, size);
   }
 
 
@@ -443,7 +443,8 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   // Change Image
   if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
   {
-    char guesslist[MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS];
+    //MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS
+    char guesslist[1000000];
     strcpy(guesslist, "Keywords: ");
     for (int i = 0; i < players[curr_play_num].num_guesses; ++i)
     {
@@ -451,28 +452,36 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
         strcat(guesslist, ",");
     }
     printf(buff, img, guesslist);
-    n = sprintf(temp, buff, img, guesslist);
-    temp[n] = 0;
+    n = sprintf(str, buff, img, guesslist);
+    str[n] = 0;
+  }
+
+  else if (strcmp(page, TURN) == 0 || strcmp(page, DISCARDED) == 0)
+  {
+    //MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS
+    printf(buff, img, guesslist);
+    n = sprintf(str, buff, img);
+    str[n] = 0;
   }
 
   // Show Username
-  if (strcmp(page, START) == 0) {
+  else if (strcmp(page, START) == 0) {
     for (int i = 0; i < 2; ++i)
     {
       if (players[i].sockfd == sockfd)
       {
-        n = sprintf(temp, buff, players[i].name);
-        temp[n] = 0;
+        n = sprintf(str, buff, players[i].name);
+        str[n] = 0;
       }
     }
   }
   else
   {
-      strcpy(temp, buff);
+      strcpy(str, buff);
   }
 
 
-  if (write(sockfd, temp, size) < 0)
+  if (write(sockfd, str, size) < 0)
   {
       perror("write");
       return false;
