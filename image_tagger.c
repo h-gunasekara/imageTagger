@@ -332,6 +332,7 @@ int main(int argc, char * argv[])
     FD_SET(sockfd, &masterfds);
     // record the maximum socket number
     int maxfd = sockfd;
+    fprintf(stderr, "image_tagger server is now running at IP: %s on port %s\n", argv[1], argv[2]);
     player_t* players = malloc(sizeof(player_t) * 2);
     while (1)
     {
@@ -476,7 +477,6 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
     {
       if (players[i].sockfd == sockfd)
       {
-        printf("%s\n", players[i].name);
         n = sprintf(temp, buff, img, players[i].name);
         temp[n] = 0;
       }
