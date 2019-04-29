@@ -260,7 +260,7 @@ static bool handle_http_request(int sockfd, player_t* players)
               return send_page(sockfd, n, buff, ACCEPTED, players);
             }
             // if the other player should be going to end game
-            else if (players[self].finished == 1 || players[other].finished == 1)   {
+            else if (players[other].finished == 1)   {
                 players[self].finished = 0;
                 players[self].playing = 0;
                 players[other].finished = 0;
