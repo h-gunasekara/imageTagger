@@ -421,7 +421,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   {
       char temp[strlen("Set-Cookie: username=%s\r\n") + MAXKEYLENGTH];
       sprintf(temp, "Set-Cookie: username=%s\r\n", players[curr_play_num].name);
-      size = st.st_size + players[curr_play_num].name_len  - 1;
+      size = st.st_size + players[curr_play_num].name_len  - 2;
       n = sprintf(buff, HTTP_200_FORMAT, temp, size);
   }
 
@@ -448,8 +448,8 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   // Change Image
   if (strcmp(page, ACCEPTED) == 0)
   {
-    //MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS
-    char guesslist[1000000];
+
+    char guesslist[MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS];
     strcpy(guesslist, "Keywords: ");
     for (int i = 0; i < players[curr_play_num].num_guesses; ++i)
     {
