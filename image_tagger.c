@@ -196,7 +196,7 @@ static bool handle_http_request(int sockfd, player_t* players)
               players[i].playing = 0;
               for (int remove = 0; remove <= players[i].num_guesses; ++remove)
               {
-                free(players[i].guesses[remove]);
+                players[i].guesses[remove] = NULL;
               }
               printf("%s logged out on %d\n", players[i].name, sockfd);
             }
@@ -244,13 +244,13 @@ static bool handle_http_request(int sockfd, player_t* players)
                   // remove the players current guess list
                   for (int remove = 0; remove <= players[self].num_guesses; ++remove)
                   {
-                    players[self].guesses[remove] = (char *) realloc(players[self].guesses[remove], MAXKEYLENGTH);
+                    players[self].guesses[remove] = NULL;
                   }
                   players[self].num_guesses = 0;
                   // remove the other players guess list
                   for (int remove = 0; remove <= players[other].num_guesses; ++remove)
                   {
-                    players[other].guesses[remove] = (char *) realloc(players[other].guesses[remove], MAXKEYLENGTH);
+                    players[other].guesses[remove] = NULL;
                   }
                   players[other].num_guesses = 0;
                   //reset all stats here
@@ -401,7 +401,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
       }
   }
 
-  if (strcmp(page, TURN) == 0 || strcmp(page, ACCEPTED) == 0 || strcmp(page, DISCARDED) == 0)
+  if (strcmp(page, ACCEPTED) == 0)
   {
       size = st.st_size - 2;
       if (players[curr_play_num].num_guesses != 0)
@@ -456,7 +456,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
       if (i == 0){
         strcat(guesslist, players[curr_play_num].guesses[i]);
       } else {
-        strcat(guesslist, ",");
+        strcat(guesslist, ", ");
         strcat(guesslist, players[curr_play_num].guesses[i]);
       }
     }
