@@ -391,7 +391,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   // increase file size to accommodate the username
   long size = st.st_size;
   int curr_play_num;
-  char str[2048];
+  char temp[2048];
 
   for (int i = 0; i < 2; ++i)
   {
@@ -419,10 +419,10 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
 
   if (strcmp(page, START) == 0)
   {
-      char str[strlen("Set-Cookie: username=%s\r\n") + MAXKEYLENGTH];
-      sprintf(str, "Set-Cookie: username=%s\r\n", players[curr_play_num].name);
+      char temp[strlen("Set-Cookie: username=%s\r\n") + MAXKEYLENGTH];
+      sprintf(temp, "Set-Cookie: username=%s\r\n", players[curr_play_num].name);
       size = st.st_size + players[curr_play_num].name_len  - 1;
-      n = sprintf(buff, HTTP_200_FORMAT, str, size);
+      n = sprintf(buff, HTTP_200_FORMAT, temp, size);
   }
 
 
@@ -460,17 +460,14 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
         strcat(guesslist, players[curr_play_num].guesses[i]);
       }
     }
-    printf(buff, img, guesslist);
-    n = sprintf(str, buff, img, guesslist);
-    str[n] = 0;
+    n = sprintf(temp, buff, img, guesslist);
+    temp[n] = 0;
   }
 
-  else if (strcmp(page, TURN) == 0 || strcmp(page, DISCARDED) == 0)
+  else if (strcmp(page, INTRO) == 0 || strcmp(page, TURN) == 0 || strcmp(page, DISCARDED) == 0)
   {
-    //MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS
-    printf(buff, img);
-    n = sprintf(str, buff, img);
-    str[n] = 0;
+    n = sprintf(temp, buff, img);
+    temp[n] = 0;
   }
 
   // Show Username
@@ -479,18 +476,18 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
     {
       if (players[i].sockfd == sockfd)
       {
-        n = sprintf(str, buff, players[i].name);
-        str[n] = 0;
+        n = sprintf(temp, buff, img, players[i].name);
+        temp[n] = 0;
       }
     }
   }
   else
   {
-      strcpy(str, buff);
+      strcpy(temp, buff);
   }
 
 
-  if (write(sockfd, str, size) < 0)
+  if (write(sockfd, temp, size) < 0)
   {
       perror("write");
       return false;
