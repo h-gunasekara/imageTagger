@@ -194,9 +194,9 @@ static bool handle_http_request(int sockfd, player_t* players)
             if (players[i].sockfd == sockfd)
             {
               players[i].playing = 0;
-              for (int remove = 0; remove <= players[self].num_guesses; ++remove)
+              for (int remove = 0; remove <= players[i].num_guesses; ++remove)
               {
-              free(players[i].guesses[remove]);
+                free(players[i].guesses[remove]);
               }
               printf("%s logged out on %d\n", players[i].name, sockfd);
             }
