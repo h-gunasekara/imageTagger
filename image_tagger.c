@@ -459,7 +459,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   else if (strcmp(page, TURN) == 0 || strcmp(page, DISCARDED) == 0)
   {
     //MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS
-    printf(buff, img, guesslist);
+    printf(buff, img);
     n = sprintf(str, buff, img);
     str[n] = 0;
   }
