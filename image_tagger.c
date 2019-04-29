@@ -445,11 +445,10 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
   }
   close(filefd);
 
-  // Change Image
+  // Add keywords
   if (strcmp(page, ACCEPTED) == 0)
   {
-
-    char guesslist[MAXKEYLENGTH * MAXKEYWORDS + MAXKEYWORDS];
+    char guesslist[1000000];
     strcpy(guesslist, "Keywords: ");
     for (int i = 0; i < players[curr_play_num].num_guesses; ++i)
     {
@@ -464,6 +463,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
     temp[n] = 0;
   }
 
+  //changed the picture
   else if (strcmp(page, INTRO) == 0 || strcmp(page, TURN) == 0 || strcmp(page, DISCARDED) == 0)
   {
     n = sprintf(temp, buff, img);
@@ -476,6 +476,7 @@ static bool send_page(int sockfd, int n, char* buff, char* page, player_t* playe
     {
       if (players[i].sockfd == sockfd)
       {
+        printf("%s\n", players[i].name);
         n = sprintf(temp, buff, img, players[i].name);
         temp[n] = 0;
       }
